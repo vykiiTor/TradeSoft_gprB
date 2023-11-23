@@ -1,2 +1,2 @@
 # TradeSoft_gprB
-trading software porject for the group B, M2 students 
+trading software project for the group B, M2 students 
