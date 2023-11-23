@@ -1,0 +1,15 @@
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\bin\Debug\net8.0\TradeSoft_gprB.exe
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\bin\Debug\net8.0\TradeSoft_gprB.deps.json
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\bin\Debug\net8.0\TradeSoft_gprB.runtimeconfig.json
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\bin\Debug\net8.0\TradeSoft_gprB.dll
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\bin\Debug\net8.0\TradeSoft_gprB.pdb
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.AssemblyInfoInputs.cache
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.AssemblyInfo.cs
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.csproj.CoreCompileInputs.cache
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.sourcelink.json
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.dll
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\refint\TradeSoft_gprB.dll
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.pdb
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\TradeSoft_gprB.genruntimeconfig.cache
+C:\Users\1\source\repos\TradeSoft_gprB\TradeSoft_gprB\obj\Debug\net8.0\ref\TradeSoft_gprB.dll
