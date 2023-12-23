@@ -35,7 +35,7 @@ public class Ticks_Data
         return Time + "," + Quantity + "," + Price;
     }
 
-    public static void Print_Ticks_List(List<Ticks_Data> list)
+    public static void PrintTicksList(List<Ticks_Data> list)
     {
         foreach (Ticks_Data t in list)
         {
@@ -44,7 +44,7 @@ public class Ticks_Data
     }
 
     // transform a csv file (with ',' separator) into a List<Ticks_Data>
-    public static List<Ticks_Data> csv_To_Ticks(String filepath)
+    public static List<Ticks_Data> csvToTicks(String filepath)
     {
         List<Ticks_Data> ticks_Datas = new List<Ticks_Data>();
 
@@ -103,7 +103,7 @@ public class OHCL_Data
     }
 
     // Transform ticks (List<Ticks_Data>) into an OHCL of period (milliseconds)
-    public static List<OHCL_Data> Ticks_To_OHCL(List<Ticks_Data> ticks, long period)
+    public static List<OHCL_Data> TicksToOHCL(List<Ticks_Data> ticks, long period)
     {
         List<OHCL_Data> oHCL_Datas = new List<OHCL_Data>();
 
@@ -139,7 +139,7 @@ public class OHCL_Data
         return Time + "," + Open + "," + High + "," + Close + "," + Low;
     }
 
-    public static void Print_OHCL_List(List<OHCL_Data> list)
+    public static void PrintOHCLList(List<OHCL_Data> list)
     {
         Console.WriteLine(list.Count);
 
@@ -153,9 +153,9 @@ public class OHCL_Data
     {
         // console testing
         String path = "../../../tradesoft-ticks-sample.csv";
-        List<Ticks_Data> list = Ticks_Data.csv_To_Ticks(path);
-        List<OHCL_Data> oHCL_Datas = OHCL_Data.Ticks_To_OHCL(list, 1000 * 60 * 15);
-        OHCL_Data.Print_OHCL_List(oHCL_Datas);
+        List<Ticks_Data> list = Ticks_Data.csvToTicks(path);
+        List<OHCL_Data> oHCL_Datas = OHCL_Data.TicksToOHCL(list, 1000 * 60 * 15);
+        OHCL_Data.PrintOHCLList(oHCL_Datas);
     }*/
 }
 
