@@ -4,20 +4,16 @@ public class Market_Simulator
 {
 	public Market_Simulator()
 	{
-		Thread market = new Thread(ReceivePrices);
-		market.Start();
+		
 	}
 
-	public void ReceivePrices()
-	{
-		while(true)
-		{
-			//OnReceivePrices
-		}
-	}
-
-    public void OnReceivePrices(DateTime time, decimal price)
+    public void ReceivePrices (Object sender, TickEventArgs e)
     {
-        //Console.WriteLine("Time : " + time.ToString() + " ; Price : " + price.ToString());
+        Thread market = new Thread(() =>
+        {
+            Console.WriteLine($"Received data: {e.Tick.Price}");
+        });
+        market.Start();
     }
+
 }

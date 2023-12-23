@@ -111,6 +111,7 @@ public class OHCL_Data
         TimeSpan timeScale = TimeSpan.FromMilliseconds(period);
 
         // group ticks by period of time
+        // https://stackoverflow.com/questions/73080797/c-sharp-tick-by-tick-stock-data-to-ohlc-candles-resample-on-different-timeframe
         var groupedTicksData = ticks
             .GroupBy(ticksData => (ticksData.Time - firstPeriod).Ticks / timeScale.Ticks)
             .Select(group => new
