@@ -149,14 +149,14 @@ public class OHCL_Data
         }
     }
 
-    public static void Main(string[] args)
+    /*public static void Main(string[] args)
     {
         // console testing
         String path = "../../../tradesoft-ticks-sample.csv";
         List<Ticks_Data> list = Ticks_Data.csv_To_Ticks(path);
         List<OHCL_Data> oHCL_Datas = OHCL_Data.Ticks_To_OHCL(list, 1000 * 60 * 15);
         OHCL_Data.Print_OHCL_List(oHCL_Datas);
-    }
+    }*/
 }
 
 
