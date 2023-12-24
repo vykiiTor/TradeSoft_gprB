@@ -30,12 +30,12 @@ public class Backtesting_Engine
 
         // link all between them
 
-        /*List<Ticks_Data> test = new List<Ticks_Data>();
+        List<Ticks_Data> test = new List<Ticks_Data>();
         for (int i = 0; i < 10000; i++)
         {
             test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
-		ticks = test;*/
+		ticks = test;
 
         Thread backtester = new Thread(SendPrices);
 		backtester.Start();
