@@ -2,7 +2,13 @@
 
 public class Market_Simulator
 {
-	public Market_Simulator()
+    static Semaphore syncTick = new Semaphore(1, 1);
+
+    public Semaphore getSyncTick ()
+    {
+        return syncTick;
+    }
+    public Market_Simulator()
 	{
 		
 	}
@@ -11,7 +17,9 @@ public class Market_Simulator
     {
         Thread market = new Thread(() =>
         {
-            Console.WriteLine($"Received data: {e.Tick.Price}");
+            syncTick.WaitOne();
+            Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
+            syncTick.Release();
         });
         market.Start();
     }

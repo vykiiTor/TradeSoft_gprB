@@ -19,17 +19,23 @@ public class Backtesting_Engine
     Market_Simulator market = new Market_Simulator();
 
 	public event EventHandler<TickEventArgs> TickSent;
+	
 
     public Backtesting_Engine(string data_tick_path = "../../../tradesoft-ticks-sample.csv")
 	{
         ticks = Ticks_Data.csvToTicks(data_tick_path);
         market = new Market_Simulator();
-		// create risk manager
-		// create strategy manager
+        // create risk manager
+        // create strategy manager
 
-		// link all between them
+        // link all between them
 
-
+        /*List<Ticks_Data> test = new List<Ticks_Data>();
+        for (int i = 0; i < 10000; i++)
+        {
+            test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
+        } //for testing purpose
+		ticks = test;*/
 
         Thread backtester = new Thread(SendPrices);
 		backtester.Start();
@@ -40,8 +46,10 @@ public class Backtesting_Engine
 	{
 		foreach (var tick in ticks)
 		{
-			Console.WriteLine("Senging : "+tick.Price );
-			OnPriceSend(new TickEventArgs(tick));
+			market.getSyncTick().WaitOne();
+            //Console.WriteLine("Senging : "+tick.Price );
+            OnPriceSend(new TickEventArgs(tick));
+			market.getSyncTick().Release();
 		}
 	}
 
@@ -53,6 +61,9 @@ public class Backtesting_Engine
 	public static void Main(string[] args)
 	{
 		Backtesting_Engine engine = new Backtesting_Engine();
-		engine.TickSent += engine.market.ReceivePrices;
+        
+        engine.TickSent += engine.market.ReceivePrices;
+
+
 	}
 }
