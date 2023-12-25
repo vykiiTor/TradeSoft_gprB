@@ -2,9 +2,30 @@
 
 public class RiskAnalyser : TicksReceptor
 {
-	Market_Simulator Market = new Market_Simulator();
-	public RiskAnalyser(Market_Simulator market)
+    private List<Order> OrdersLog = new List<Order>();
+    private Portfolio Portfolio;
+    public RiskAnalyser()
 	{
-		Market = market;
+        Portfolio = new Portfolio(1000);
 	}
+    public Portfolio GetPortfolio()
+    {
+        return Portfolio;
+    }
+
+    public List<Order> GetOrdersLog ()
+    {
+        return OrdersLog;
+    }
+
+    // PnL ratio
+    public decimal ProfitAndLoss()
+    {
+        return Portfolio.Cash - Portfolio.InitialCash;
+    }
+
+    public void StrategyReport()
+    {
+        Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
+    }
 }

@@ -3,36 +3,48 @@
 public class Market_Simulator : TicksReceptor
 {
 	private decimal CurrentMarketPrice = -1;
-    public Market_Simulator()
-	{
-		
-	}
 
-    public override void ReceivePrices(Object sender, TickEventArgs e)
+    private List<Order> orders = new List<Order>();
+    private List<Order> ordersLog = new List<Order>();
+
+    internal Strategy_Manager StrategyManager;
+    public Market_Simulator()
+    {
+
+    }
+
+    public void setStrategyManager (Strategy_Manager strategyManager)
+    {
+        StrategyManager = strategyManager;
+    }
+
+    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
     {
         Thread market = new Thread(() =>
         {
-            this.getSyncTick().WaitOne();
+            this.getSyncObject().WaitOne();
             //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-			CurrentMarketPrice = e.Tick.Price;
-			Console.WriteLine("Current price : " + CurrentMarketPrice);
-            this.getSyncTick().Release();
+            getObjectList().Add(e.Data);
+            CurrentMarketPrice = ((Ticks_Data)e.Data).Price;
+            //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
+			//Console.WriteLine("Current price : " + CurrentMarketPrice);
+            this.getSyncObject().Release();
         });
         market.Start();
     }
 
-    public OrderLog receiveOrder(Order order)
+    public Order receiveOrder(Order order)
     {
+        orders.Add(order);
         decimal StrikePrice = -1;
-        OrderLog orderlog = new OrderLog();
+        Order orderlog = new Order();
         if (order.typeOrder == TypeOrder.Market)
         {
-            // lock the market price ?
             StrikePrice = this.CurrentMarketPrice;
-            Console.WriteLine(order.Quantity + " of asset was bought at " + StrikePrice);
-            orderlog = new OrderLog(DateTime.Now, order.Quantity, order.typeOrder, StrikePrice);
+            orderlog = new Order(DateTime.Now, order.Quantity, order.typeOrder, order.Striker, StrikePrice);
         }
-        return orderlog;
+        ordersLog.Add(orderlog);
+        return (orderlog);
     }
 }
 
@@ -42,36 +54,26 @@ public class Order
     internal long Quantity { get; set; }
     internal TypeOrder typeOrder { get; set; }
     internal decimal Price { get; set; }
+    internal string Striker { get; set; }
 
-    public Order (DateTime time, long quantity, TypeOrder type_order, decimal price=0)
+    public Order ()
+    {
+
+    }
+    public Order (DateTime time, long quantity, TypeOrder type_order, string striker, decimal price=0)
 	{
 		Time = time;
 		Quantity = quantity;
 		typeOrder = type_order;
 		Price = price;
+        Striker = striker;
 	}
+
+    public string printOrder()
+    {
+        return "order from "+Striker+" done at "+Time+" of "+Quantity+" asset at "+Price+"";
+    }
     
-}
-
-public class OrderLog
-{
-    internal DateTime Time { get; set; }
-    internal long Quantity { get; set; }
-    internal TypeOrder typeOrder { get; set; }
-    internal decimal Price { get; set; }
-
-    public OrderLog ()
-    {
-
-    }
-
-    public OrderLog(DateTime time, long quantity, TypeOrder type_order, decimal price)
-    {
-        Time = time;
-        Quantity = quantity;
-        typeOrder = type_order;
-        Price = price;
-    }
 }
 
 public enum TypeOrder
