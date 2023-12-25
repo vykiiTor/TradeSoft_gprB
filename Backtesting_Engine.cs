@@ -2,29 +2,30 @@
 
 // Event arguments class to carry the data
 // https://stackoverflow.com/questions/15766219/ok-to-use-dataeventargstdata-instead-of-customized-event-data-class
-public class TickEventArgs : EventArgs
-{
-    public Ticks_Data Tick { get; }
-
-    public TickEventArgs(Ticks_Data tick)
-    {
-        Tick = tick;
-    }
-}
 
 public class Backtesting_Engine
 {
-	private List<Ticks_Data> ticks = new List<Ticks_Data>();
+	private List<Ticks_Data> Ticks = new List<Ticks_Data>();
 
-    Market_Simulator market = new Market_Simulator();
-
-	public event EventHandler<TickEventArgs> TickSent;
+	internal Market_Simulator Market;
+	internal RiskAnalyser Risk;
+	internal Strategy_Manager Strategy;
+	
+	public event EventHandler<ObjectEventArgs<Ticks_Data>> TickSent;
 	
 
-    public Backtesting_Engine(string data_tick_path = "../../../tradesoft-ticks-sample.csv")
+    public Backtesting_Engine(Market_Simulator simulator, RiskAnalyser analyser, Strategy_Manager strategy,
+		string data_tick_path = "../../../tradesoft-ticks-sample.csv")
 	{
-        ticks = Ticks_Data.csvToTicks(data_tick_path);
-        market = new Market_Simulator();
+		Market = simulator;
+		Risk = analyser;
+		Strategy = strategy;
+
+        TickSent += Market.DataReception;
+        TickSent += Risk.DataReception;
+        TickSent += Strategy.DataReception;
+
+        Ticks = Ticks_Data.csvToTicks(data_tick_path);
         // create risk manager
         // create strategy manager
 
@@ -35,7 +36,7 @@ public class Backtesting_Engine
         {
             test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
-		ticks = test;
+		Ticks = test;
 
         Thread backtester = new Thread(SendPrices);
 		backtester.Start();
@@ -44,26 +45,19 @@ public class Backtesting_Engine
 	// send prices to all component attached to the backtester (strategy, market and risk)
 	public void SendPrices()
 	{
-		foreach (var tick in ticks)
+		foreach (var tick in Ticks)
 		{
-			market.getSyncTick().WaitOne();
+			Market.getSyncObject().WaitOne();
             //Console.WriteLine("Senging : "+tick.Price );
-            OnPriceSend(new TickEventArgs(tick));
-			market.getSyncTick().Release();
+            OnPriceSend(new ObjectEventArgs<Ticks_Data>(tick));
+			Market.getSyncObject().Release();
 		}
 	}
 
-	protected virtual void OnPriceSend(TickEventArgs e)
+	protected virtual void OnPriceSend(ObjectEventArgs<Ticks_Data> e)
 	{
 		TickSent?.Invoke(this, e);
 	}
 
-	public static void Main(string[] args)
-	{
-		Backtesting_Engine engine = new Backtesting_Engine();
-        
-        engine.TickSent += engine.market.ReceivePrices;
-
-
-	}
+	
 }
