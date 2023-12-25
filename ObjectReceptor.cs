@@ -51,23 +51,7 @@ public class TicksReceptor : ObjectReceptor<Ticks_Data>
             this.getSyncObject().WaitOne();
             //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
             getObjectList().Add(e.Data);
-            Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-            this.getSyncObject().Release();
-        });
-        market.Start();
-    }
-}
-
-public class OrderReceptor : ObjectReceptor<Order>
-{
-    public override void DataReception(Object sender, ObjectEventArgs<Order> e)
-    {
-        Thread market = new Thread(() =>
-        {
-            this.getSyncObject().WaitOne();
-            //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-            getObjectList().Add(e.Data);
-            Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
+            //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
             this.getSyncObject().Release();
         });
         market.Start();

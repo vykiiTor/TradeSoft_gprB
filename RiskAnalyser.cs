@@ -2,7 +2,13 @@
 
 public class RiskAnalyser : TicksReceptor
 {
-	public RiskAnalyser()
+    private List<Order> OrdersLog = new List<Order>();
+    public RiskAnalyser()
 	{
 	}
+
+    public List<Order> GetOrdersLog ()
+    {
+        return OrdersLog;
+    }
 }

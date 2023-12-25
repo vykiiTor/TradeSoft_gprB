@@ -8,7 +8,6 @@ public class Market_Simulator : TicksReceptor
     private List<Order> ordersLog = new List<Order>();
 
     internal Strategy_Manager StrategyManager;
-    internal RiskAnalyser RiskAnalyser;
     public Market_Simulator()
     {
 
@@ -17,10 +16,6 @@ public class Market_Simulator : TicksReceptor
     public void setStrategyManager (Strategy_Manager strategyManager)
     {
         StrategyManager = strategyManager;
-    }
-    public void setRiskAnalyser(RiskAnalyser riskAnalyser)
-    {
-        RiskAnalyser = riskAnalyser;
     }
 
     public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
@@ -31,8 +26,8 @@ public class Market_Simulator : TicksReceptor
             //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
             getObjectList().Add(e.Data);
             CurrentMarketPrice = ((Ticks_Data)e.Data).Price;
-            Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-			Console.WriteLine("Current price : " + CurrentMarketPrice);
+            //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
+			//Console.WriteLine("Current price : " + CurrentMarketPrice);
             this.getSyncObject().Release();
         });
         market.Start();
@@ -46,10 +41,9 @@ public class Market_Simulator : TicksReceptor
         {
             // lock the market price ?
             StrikePrice = this.CurrentMarketPrice;
-            Console.WriteLine(order.Quantity + " of asset was bought at " + StrikePrice);
             orderlog = new Order(DateTime.Now, order.Quantity, order.typeOrder, order.Striker, StrikePrice);
         }
-        return orderlog;
+        return (orderlog);
     }
 }
 
@@ -73,6 +67,11 @@ public class Order
 		Price = price;
         Striker = striker;
 	}
+
+    public string printOrder()
+    {
+        return "order from "+Striker+" done at "+Time+" of "+Quantity+" asset at "+Price+"";
+    }
     
 }
 
