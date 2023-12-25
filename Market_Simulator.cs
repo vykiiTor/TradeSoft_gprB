@@ -35,14 +35,15 @@ public class Market_Simulator : TicksReceptor
 
     public Order receiveOrder(Order order)
     {
+        orders.Add(order);
         decimal StrikePrice = -1;
         Order orderlog = new Order();
         if (order.typeOrder == TypeOrder.Market)
         {
-            // lock the market price ?
             StrikePrice = this.CurrentMarketPrice;
             orderlog = new Order(DateTime.Now, order.Quantity, order.typeOrder, order.Striker, StrikePrice);
         }
+        ordersLog.Add(orderlog);
         return (orderlog);
     }
 }

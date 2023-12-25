@@ -37,6 +37,9 @@ public class Backtesting_Engine
 
         Thread backtester = new Thread(SendPrices);
 		backtester.Start();
+		backtester.Join();
+
+		Risk.StrategyReport();
 	}
 
 	// send prices to all component attached to the backtester (strategy, market and risk)
@@ -45,11 +48,11 @@ public class Backtesting_Engine
 		foreach (var tick in Ticks)
 		{
 			Market.getSyncObject().WaitOne();
-			Console.WriteLine("Senging : "+tick.Price );
+			//Console.WriteLine("Senging : "+tick.Price );
             OnPriceSend(new ObjectEventArgs<Ticks_Data>(tick));
 			Market.getSyncObject().Release();
 		}
-	}
+    }
 
 	protected virtual void OnPriceSend(ObjectEventArgs<Ticks_Data> e)
 	{

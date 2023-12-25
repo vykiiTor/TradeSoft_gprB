@@ -14,6 +14,7 @@ public abstract class ObjectReceptor<T>
 {
     static Semaphore SyncObject = new Semaphore(1, 1);
     private List<T> ObjectList = new List<T>();
+    public event EventHandler<ObjectEventArgs<T>> DataReceived;
     public Semaphore getSyncObject()
     {
         return SyncObject;
@@ -22,6 +23,11 @@ public abstract class ObjectReceptor<T>
     public List<T> getObjectList()
     {
         return ObjectList;
+    }
+
+    public EventHandler<ObjectEventArgs<T>> getDataReceived()
+    {
+        return DataReceived;
     }
     public ObjectReceptor()
     {
@@ -36,8 +42,14 @@ public abstract class ObjectReceptor<T>
             ObjectList.Add(e.Data);
             Console.WriteLine($"Received Object: {e.Data.ToString}");
             SyncObject.Release();
+            OnDataReceived(e.Data);
         });
         receptor.Start();
+    }
+
+    protected virtual void OnDataReceived(T data)
+    {
+        DataReceived?.Invoke(this, new ObjectEventArgs<T>(data));
     }
 
 }
