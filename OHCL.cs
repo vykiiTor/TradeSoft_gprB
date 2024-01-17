@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Globalization;
 
 // author: Antonin Boyon
 public class Ticks_Data
@@ -60,7 +61,7 @@ public class Ticks_Data
                 Ticks_Data data = new Ticks_Data(
                     DateTime.ParseExact(columns[0], "yyyy-MM-dd HH:mm:ss.fff", null),
                     Int32.Parse(columns[2]),
-                    decimal.Parse(columns[3]));
+                    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
                 ticks_Datas.Add(data);
             }
         }
