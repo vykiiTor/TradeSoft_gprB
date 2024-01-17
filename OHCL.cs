@@ -59,7 +59,7 @@ public class Ticks_Data
 
                 string[] columns = line.Split(',');
                 Ticks_Data data = new Ticks_Data(
-                    DateTime.ParseExact(columns[0], "yyyy-MM-dd HH:mm:ss.fff", null),
+                    DateTime.ParseExact(columns[0], "mm:ss.f", null),
                     Int32.Parse(columns[2]),
                     decimal.Parse(columns[3], CultureInfo.InvariantCulture));
                 ticks_Datas.Add(data);
