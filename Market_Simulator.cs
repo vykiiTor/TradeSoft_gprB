@@ -20,17 +20,12 @@ public class Market_Simulator : TicksReceptor
 
     public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
     {
-        Thread market = new Thread(() =>
-        {
-            this.getSyncObject().WaitOne();
-            //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-            getObjectList().Add(e.Data);
-            CurrentMarketPrice = ((Ticks_Data)e.Data).Price;
-            //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-			//Console.WriteLine("Current price : " + CurrentMarketPrice);
-            this.getSyncObject().Release();
-        });
-        market.Start();
+        this.getSyncObject().WaitOne();
+        //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
+        getObjectList().Add(e.Data);
+        CurrentMarketPrice = ((Ticks_Data)e.Data).Price;
+        //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
+        //Console.WriteLine("Current price : " + CurrentMarketPrice);
     }
 
     public Order receiveOrder(Order order)

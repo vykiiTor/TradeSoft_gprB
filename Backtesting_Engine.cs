@@ -12,6 +12,7 @@ public class Backtesting_Engine
 	internal RiskAnalyser Risk;
 	internal Strategy_Manager Strategy;
 	
+	//To be removed
 	public event EventHandler<ObjectEventArgs<Ticks_Data>> TickSent;
 	
 
@@ -22,11 +23,11 @@ public class Backtesting_Engine
 		Risk = analyser;
 		Strategy = strategy;
 
-        TickSent += Market.DataReception;
-        TickSent += Risk.DataReception;
-        TickSent += Strategy.DataReception;
+		Ticks = Ticks_Data.csvToTicks(data_tick_path);
 
-        Ticks = Ticks_Data.csvToTicks(data_tick_path);
+		SendPrices();
+        
+		Risk.StrategyReport();
 
         /*List<Ticks_Data> test = new List<Ticks_Data>();
         for (int i = 0; i < 10000; i++)
@@ -34,10 +35,6 @@ public class Backtesting_Engine
             test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
 		Ticks = test;*/
-
-        Thread backtester = new Thread(SendPrices);
-		backtester.Start();
-		backtester.Join();
 
 		Risk.StrategyReport();
 	}
@@ -47,10 +44,8 @@ public class Backtesting_Engine
 	{
 		foreach (var tick in Ticks)
 		{
-			Market.getSyncObject().WaitOne();
 			//Console.WriteLine("Senging : "+tick.Price );
             OnPriceSend(new ObjectEventArgs<Ticks_Data>(tick));
-			Market.getSyncObject().Release();
 		}
     }
 
