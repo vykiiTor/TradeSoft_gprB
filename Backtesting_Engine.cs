@@ -21,7 +21,7 @@ public class Backtesting_Engine
 		ticks = Ticks_Data.csvToTicks(filePath);
 		foreach (var tick in ticks)
 		{
-			//Console.WriteLine("Senging : "+tick.Price );
+			//Console.WriteLine("Senging :  "+tick.Price );
 			market.UpdateMarketPrice(tick.Price);
 			strategy.RunStrategy();
 		}
