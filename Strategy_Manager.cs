@@ -19,21 +19,6 @@ public class Strategy_Manager : TicksReceptor
 		StrategyName = strategyName;
 		Risk = risk;
         Portfolio = new Portfolio(1000);
-
-        /*Thread strategy = new Thread(RunStrategy);
-        strategy.Start();*/
-    }
-
-    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
-    {
-        Thread receptor = new Thread(() =>
-        {
-            getSyncObject().WaitOne();
-            getObjectList().Add(e.Data);
-            getSyncObject().Release();
-            OnDataReceived(e.Data);
-        });
-        receptor.Start();
     }
     public int ApplyStrategy ()
     {
@@ -69,12 +54,6 @@ public class Strategy_Manager : TicksReceptor
                 //Console.WriteLine(orderLog.printOrder());
             }
 	}
-    protected override void OnDataReceived(Ticks_Data data)
-    {
-        getDataReceived()?.Invoke(this, new ObjectEventArgs<Ticks_Data>(data));
-        RunStrategy();
-    }
-
 }
 
 // We assess that, in our case, a portfolio can handle only one asset at once

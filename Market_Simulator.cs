@@ -17,17 +17,7 @@ public class Market_Simulator : TicksReceptor
     {
         StrategyManager = strategyManager;
     }
-    //to be removed
-    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
-    {
-        this.getSyncObject().WaitOne();
-        //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-        getObjectList().Add(e.Data);
-        currentMarketPrice = ((Ticks_Data)e.Data).Price;
-        //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-        //Console.WriteLine("Current price : " + CurrentMarketPrice);
-    }
-
+    
     public Order receiveOrder(Order order)
     {
         orders.Add(order);

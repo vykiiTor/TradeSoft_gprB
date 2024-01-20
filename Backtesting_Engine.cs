@@ -8,33 +8,24 @@ public class Backtesting_Engine
 {
 	private List<Ticks_Data> ticks = new List<Ticks_Data>();
 
-	internal Market_Simulator Market;
-	internal RiskAnalyser Risk;
-	internal Strategy_Manager Strategy;
+	private Market_Simulator market;
+	private RiskAnalyser risk;
+	private Strategy_Manager strategy;
 	
-	
-
-    public Backtesting_Engine(Market_Simulator simulator, RiskAnalyser analyser, Strategy_Manager strategy,
+    public Backtesting_Engine(Market_Simulator market, RiskAnalyser risk, Strategy_Manager strategy,
 		string filePath = "../../../tradesoft-ticks-sample.csv")
 	{
-		Market = simulator;
-		Risk = analyser;
-		Strategy = strategy;
-
+		this.market = market;
+		this.risk = risk;
+		this.strategy = strategy;
 		ticks = Ticks_Data.csvToTicks(filePath);
-
 		foreach (var tick in ticks)
 		{
 			//Console.WriteLine("Senging : "+tick.Price );
-			Market.UpdateMarketPrice(tick.Price);
-			/* refacto the data recep
-			Risk.DataReception;
-			Strategy.DataReception;*/
-			Strategy.RunStrategy();
-			
+			market.UpdateMarketPrice(tick.Price);
+			strategy.RunStrategy();
 		}
-        
-		Risk.StrategyReport();
+		risk.StrategyReport();
 
         /*List<Ticks_Data> test = new List<Ticks_Data>();
         for (int i = 0; i < 10000; i++)
@@ -44,4 +35,6 @@ public class Backtesting_Engine
 		Ticks = test;*/
         
 	}
+    //getList
+    //getListAtoB //past only
 }

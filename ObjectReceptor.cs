@@ -1,5 +1,6 @@
 ﻿using System;
 
+//to be removed
 public class ObjectEventArgs<T> : EventArgs
 {
     public T Data { get; }
