@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class Market_Simulator : TicksReceptor
+public class Market_Simulator
 {
 	private decimal currentMarketPrice = -1;
 
