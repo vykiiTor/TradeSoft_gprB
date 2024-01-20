@@ -23,7 +23,16 @@ public class Backtesting_Engine
 
 		ticks = Ticks_Data.csvToTicks(filePath);
 
-		SendPrices();
+		foreach (var tick in ticks)
+		{
+			//Console.WriteLine("Senging : "+tick.Price );
+			Market.UpdateMarketPrice(tick.Price);
+			/* refacto the data recep
+			Risk.DataReception;
+			Strategy.DataReception;*/
+			Strategy.RunStrategy();
+			
+		}
         
 		Risk.StrategyReport();
 
@@ -33,15 +42,6 @@ public class Backtesting_Engine
             test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
 		Ticks = test;*/
+        
 	}
-
-	// send prices to all component attached to the backtester (strategy, market and risk)
-	public void SendPrices()
-	{
-		foreach (var tick in ticks)
-		{
-			//Console.WriteLine("Senging : "+tick.Price );
-			Market.UpdateMarketPrice(tick.Price);
-		}
-    }
 }

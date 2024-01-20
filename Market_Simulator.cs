@@ -17,7 +17,7 @@ public class Market_Simulator : TicksReceptor
     {
         StrategyManager = strategyManager;
     }
-
+    //to be removed
     public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
     {
         this.getSyncObject().WaitOne();
