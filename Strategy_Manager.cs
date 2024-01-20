@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-public class Strategy_Manager : TicksReceptor
+public class Strategy_Manager
 {
 	internal Market_Simulator Market;
 	internal RiskAnalyser Risk;
@@ -22,23 +22,9 @@ public class Strategy_Manager : TicksReceptor
     }
     public int ApplyStrategy ()
     {
-
-        if (getObjectList().Count > 2 && (getObjectList()[getObjectList().Count - 1].Price > 
-            getObjectList()[getObjectList().Count - 2].Price))
-        {
-            // check if enough cash to buy
-            if(Portfolio.Cash >= getObjectList().Last().Price)
-            // return asset quantity to buy
-                return 1;
-        }
-        else if (getObjectList().Count > 2 && (getObjectList()[getObjectList().Count - 1].Price <
-            getObjectList()[getObjectList().Count - 2].Price))
-        {
-            // check if enough asset to sell in the portfolio
-            if (Portfolio.Quantity >= 1)
-                // return asset quantity to sell
-                return -1;
-        }
+	    if(Portfolio.Cash >= 0)
+		    // return asset quantity to buy
+		    return 1;
         return 0;
     }
 
