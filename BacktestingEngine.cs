@@ -21,16 +21,16 @@ public class BacktestingEngine
 		ticks = TicksData.CsvToTicks(filePath);
 		foreach (var tick in ticks)
 		{
-			//Console.WriteLine("Senging :  "+tick.Price );
+			//Console.WriteLine("Senging :  "+tick.price );
 			market.UpdateMarketPrice(tick.price);
 			strategy.RunStrategy();
 		}
 		risk.StrategyReport();
 
-        /*List<Ticks_Data> test = new List<Ticks_Data>();
+        /*List<TicksData> test = new List<TicksData>();
         for (int i = 0; i < 10000; i++)
         {
-            test.Add(new Ticks_Data(DateTime.MinValue.AddSeconds(i), 1, i));
+            test.Add(new TicksData(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
 		Ticks = test;*/
         
