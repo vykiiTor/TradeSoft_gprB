@@ -3,32 +3,32 @@
 //to be removed
 public class ObjectEventArgs<T> : EventArgs
 {
-    public T data { get; }
+    public T Data { get; }
 
     public ObjectEventArgs(T data)
     {
-        data = data;
+        Data = data;
     }
 }
 
 public abstract class ObjectReceptor<T>
 {
-    static Semaphore syncObject = new Semaphore(1, 1);
-    private List<T> objectList = new List<T>();
-    public event EventHandler<ObjectEventArgs<T>> dataReceived;
-    public Semaphore GetSyncObject()
+    static Semaphore SyncObject = new Semaphore(1, 1);
+    private List<T> ObjectList = new List<T>();
+    public event EventHandler<ObjectEventArgs<T>> DataReceived;
+    public Semaphore getSyncObject()
     {
-        return syncObject;
+        return SyncObject;
     }
 
-    public List<T> GetObjectList()
+    public List<T> getObjectList()
     {
-        return objectList;
+        return ObjectList;
     }
 
-    public EventHandler<ObjectEventArgs<T>> GetDataReceived()
+    public EventHandler<ObjectEventArgs<T>> getDataReceived()
     {
-        return dataReceived;
+        return DataReceived;
     }
     public ObjectReceptor()
     {
@@ -39,33 +39,33 @@ public abstract class ObjectReceptor<T>
     {
         Thread receptor = new Thread(() =>
         {
-            syncObject.WaitOne();
-            objectList.Add(e.data);
-            Console.WriteLine($"Received Object: {e.data.ToString}");
-            syncObject.Release();
-            OnDataReceived(e.data);
+            SyncObject.WaitOne();
+            ObjectList.Add(e.Data);
+            Console.WriteLine($"Received Object: {e.Data.ToString}");
+            SyncObject.Release();
+            OnDataReceived(e.Data);
         });
         receptor.Start();
     }
 
     protected virtual void OnDataReceived(T data)
     {
-        dataReceived?.Invoke(this, new ObjectEventArgs<T>(data));
+        DataReceived?.Invoke(this, new ObjectEventArgs<T>(data));
     }
 
 }
 
-public class TicksReceptor : ObjectReceptor<TicksData>
+public class TicksReceptor : ObjectReceptor<Ticks_Data>
 {
-    public override void DataReception(Object sender, ObjectEventArgs<TicksData> e)
+    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
     {
         Thread market = new Thread(() =>
         {
-            this.GetSyncObject().WaitOne();
+            this.getSyncObject().WaitOne();
             //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-            GetObjectList().Add(e.data);
+            getObjectList().Add(e.Data);
             //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-            this.GetSyncObject().Release();
+            this.getSyncObject().Release();
         });
         market.Start();
     }
