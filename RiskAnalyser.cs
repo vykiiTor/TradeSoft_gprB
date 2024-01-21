@@ -2,26 +2,27 @@
 
 public class RiskAnalyser
 {
-    private List<Order> OrdersLog = new List<Order>();
-    private Portfolio Portfolio;
+    private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
+    private Portfolio portfolio;
     public RiskAnalyser()
 	{
-        Portfolio = new Portfolio(1000);
+        portfolio = new Portfolio(1000);
 	}
     public Portfolio GetPortfolio()
     {
-        return Portfolio;
+        return portfolio;
     }
 
-    public List<Order> GetOrdersLog ()
+    public List<OrderExecReport> GetOrdersLog ()
     {
-        return OrdersLog;
+        return ordersLog;
     }
 
     // PnL ratio
     public decimal ProfitAndLoss()
     {
-        return Portfolio.Cash - Portfolio.InitialCash;
+        return portfolio.cash - portfolio.initialCash;
+        // todo add the value of the bought asset in the portfolio
     }
 
     public void StrategyReport()

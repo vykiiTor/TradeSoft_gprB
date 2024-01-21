@@ -1,40 +1,80 @@
-public class Portfolio // We assess that, in our case, a portfolio can handle only one asset at once
+public class Portfolio
 {
-    internal decimal Cash;
-    internal decimal InitialCash;
-    internal long Quantity;
+    static int positionId = 0;
 
-    public Portfolio (decimal cash)
+    public static int GetNewPositionId()
     {
-        this.Cash = cash;
-        InitialCash = cash;
-        this.Quantity = 0;
+        return positionId++;
+    }
+
+    public struct Position
+    {
+        internal readonly int positionId;
+        internal readonly decimal price;
+        internal int quantity;
+        internal readonly string assetId;
+
+        public Position(int positionId, decimal price, int quantity, string assetId)
+        {
+            this.positionId = positionId;
+            this.price = price;
+            this.quantity = quantity;
+            this.assetId = assetId;
+        }
+    }
+
+    internal decimal cash;
+    internal decimal initialCash;
+    List<Position> positions;
+
+    public Portfolio(decimal cash)
+    {
+        this.cash = cash;
+        this.initialCash = cash;
+        this.positions = new List<Position>();
 
     }
 
     public decimal getCash()
     {
-        return this.Cash;
-    }
-    public long getQuantity()
-    {
-        return this.Quantity;
-    }
-    public void ProcessOrder (Order order)
-    {
-        lock (this)
-        {
-            Quantity += order.Quantity;
-            if (Quantity > 0)
-            {
-                Cash -= order.Quantity * order.Price;
-            }
-            else if (Quantity < 0)
-            {
-                Cash += order.Quantity * order.Price;
-            }
-            Console.WriteLine("Cash du portefeuille : " + Cash + " ; quantite du portefeuille : " + Quantity);
-        }
+        return this.cash;
     }
 
+    public void ProcessOrder(OrderExecReport orderLog)
+    {
+        if (orderLog.quantity < 0)
+        {
+            cash -= orderLog.quantity * orderLog.price;
+            positions.Add(new Position(GetNewPositionId(), orderLog.price, orderLog.quantity, orderLog.assetId));
+        }
+        else
+        {
+            int quantityToSell = orderLog.quantity;
+            for (int i = 0; i < positions.Count; i++)
+            {
+                {
+                    if (positions[i].assetId == orderLog.assetId)
+                    {
+                        // look if there is others positions to sell the asset (to not be blocked where only 50% of the order quantity can be sold)
+                        if (positions[i].quantity <= quantityToSell)
+                        {
+                            quantityToSell -= positions[i].quantity;
+                            cash += positions[i].quantity * orderLog.price;
+                            positions.RemoveAt(i);
+                            i--;
+                            if (quantityToSell == 0) break;
+                        }
+                        else
+                        {
+                            cash += quantityToSell * orderLog.price;
+                            positions[i] = new Position(positions[i].positionId, positions[i].price,
+                                    positions[i].quantity - quantityToSell, positions[i].assetId);
+                            quantityToSell = 0;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
