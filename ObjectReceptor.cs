@@ -55,9 +55,9 @@ public abstract class ObjectReceptor<T>
 
 }
 
-public class TicksReceptor : ObjectReceptor<Ticks_Data>
+public class TicksReceptor : ObjectReceptor<TicksData>
 {
-    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
+    public override void DataReception(Object sender, ObjectEventArgs<TicksData> e)
     {
         Thread market = new Thread(() =>
         {

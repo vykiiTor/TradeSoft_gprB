@@ -9,46 +9,46 @@ using System.Linq;
 using System.Globalization;
 
 // author: Antonin Boyon
-public class Ticks_Data
+public class TicksData
 {
-    internal DateTime Time { get; set; }
-    internal long Quantity { get; set; }
-    internal decimal Price { get; set; }
+    internal DateTime time { get; set; }
+    internal long quantity { get; set; }
+    internal decimal price { get; set; }
 
 
 
-    public Ticks_Data()
+    public TicksData()
     {
-        Time = DateTime.MinValue;
-        Quantity = -1;
-        Price = -1;
+        time = DateTime.MinValue;
+        quantity = -1;
+        price = -1;
     }
 
-    public Ticks_Data(DateTime time, long quantity, decimal price)
+    public TicksData(DateTime time, long quantity, decimal price)
     {
-        Time = time;
-        Quantity = quantity;
-        Price = price;
+        this.time = time;
+        this.quantity = quantity;
+        this.price = price;
     }
 
     override
     public String ToString()
     {
-        return Time + "," + Quantity + "," + Price;
+        return time + "," + quantity + "," + price;
     }
 
-    public static void PrintTicksList(List<Ticks_Data> list)
+    public static void PrintTicksList(List<TicksData> list)
     {
-        foreach (Ticks_Data t in list)
+        foreach (TicksData t in list)
         {
             Console.WriteLine(t.ToString());
         }
     }
 
-    // transform a csv file (with ',' separator) into a List<Ticks_Data>
-    public static List<Ticks_Data> csvToTicks(String filepath)
+    // transform a csv file (with ',' separator) into a List<TicksData>
+    public static List<TicksData> CsvToTicks(String filepath)
     {
-        List<Ticks_Data> ticks_Datas = new List<Ticks_Data>();
+        List<TicksData> TicksDatas = new List<TicksData>();
 
         // http://dotnet-tutorials.net/Article/read-a-csv-file-in-csharp
         string[] lines = System.IO.File.ReadAllLines(filepath);
@@ -59,15 +59,15 @@ public class Ticks_Data
             {
 
                 string[] columns = line.Split(',');
-                Ticks_Data data = new Ticks_Data(
+                TicksData data = new TicksData(
                     DateTime.ParseExact(columns[0], "mm:ss.f", null),
                     Int32.Parse(columns[2]),
                     decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-                ticks_Datas.Add(data);
+                TicksDatas.Add(data);
             }
         }
 
-        return ticks_Datas;
+        return TicksDatas;
     }
 
 
@@ -75,59 +75,59 @@ public class Ticks_Data
 
 public class OHCL_Data
 {
-    private DateTime Time { get; set; }
-    private decimal Open { get; set; }
-    private decimal High { get; set; }
-    private decimal Close { get; set; }
-    private decimal Low { get; set; }
+    private DateTime time { get; set; }
+    private decimal open { get; set; }
+    private decimal high { get; set; }
+    private decimal close { get; set; }
+    private decimal low { get; set; }
 
     public OHCL_Data()
     {
-        Time = DateTime.MinValue; Open = -1; High = -1; Close = -1; Low = -1;
+        time = DateTime.MinValue; open = -1; high = -1; close = -1; low = -1;
     }
 
     public OHCL_Data(DateTime time, decimal open, decimal high, decimal close, decimal low)
     {
-        Time = time;
-        Open = open;
-        High = high;
-        Close = close;
-        Low = low;
+        this.time = time;
+        this.open = open;
+        this.high = high;
+        this.close = close;
+        this.low = low;
     }
 
     public OHCL_Data(DateTime time, decimal open)
     {
-        Time = time;
-        Open = open;
-        High = open;
-        Close = -1;
-        Low = open;
+        this.time = time;
+        this.open = open;
+        this.high = open;
+        this.close = -1;
+        this.low = open;
     }
 
-    // Transform ticks (List<Ticks_Data>) into an OHCL of period (milliseconds)
-    public static List<OHCL_Data> TicksToOHCL(List<Ticks_Data> ticks, long period)
+    // Transform ticks (List<TicksData>) into an OHCL of period (milliseconds)
+    public static List<OHCL_Data> TicksToOHCL(List<TicksData> ticks, long period)
     {
         List<OHCL_Data> oHCL_Datas = new List<OHCL_Data>();
 
-        DateTime firstPeriod = ticks[0].Time;
+        DateTime firstPeriod = ticks[0].time;
         TimeSpan timeScale = TimeSpan.FromMilliseconds(period);
 
         // group ticks by period of time
         // https://stackoverflow.com/questions/73080797/c-sharp-tick-by-tick-stock-data-to-ohlc-candles-resample-on-different-timeframe
         var groupedTicksData = ticks
-            .GroupBy(ticksData => (ticksData.Time - firstPeriod).Ticks / timeScale.Ticks)
+            .GroupBy(ticksData => (ticksData.time - firstPeriod).Ticks / timeScale.Ticks)
             .Select(group => new
             {
                 StartTime = firstPeriod.AddTicks(group.Key * timeScale.Ticks),
                 EndTime = firstPeriod.AddTicks((group.Key + 1) * timeScale.Ticks - 1),
-                OpenPrice = group.First().Price,
-                ClosePrice = group.Last().Price,
-                HighPrice = group.Max(ticksData => ticksData.Price),
-                LowPrice = group.Min(ticksData => ticksData.Price)
+                OpenPrice = group.First().price,
+                ClosePrice = group.Last().price,
+                HighPrice = group.Max(ticksData => ticksData.price),
+                LowPrice = group.Min(ticksData => ticksData.price)
 
             });
 
-        // Print the grouped Ticks_Data
+        // Print the grouped TicksData
         foreach (var group in groupedTicksData)
         {
             oHCL_Datas.Add(new OHCL_Data(group.StartTime, group.OpenPrice, group.HighPrice, group.ClosePrice, group.LowPrice));
@@ -139,7 +139,7 @@ public class OHCL_Data
     override
     public String ToString()
     {
-        return Time + "," + Open + "," + High + "," + Close + "," + Low;
+        return time + "," + open + "," + high + "," + close + "," + low;
     }
 
     public static void PrintOHCLList(List<OHCL_Data> list)
@@ -156,7 +156,7 @@ public class OHCL_Data
     {
         // console testing
         String path = "../../../tradesoft-ticks-sample.csv";
-        List<Ticks_Data> list = Ticks_Data.csvToTicks(path);
+        List<TicksData> list = TicksData.csvToTicks(path);
         List<OHCL_Data> oHCL_Datas = OHCL_Data.TicksToOHCL(list, 1000 * 60 * 15);
         OHCL_Data.PrintOHCLList(oHCL_Datas);
     }*/

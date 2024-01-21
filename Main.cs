@@ -4,12 +4,12 @@ public class Run
 {
     public static void Main(string[] args)
     {
-        Market_Simulator simulator = new Market_Simulator();
+        MarketSimulator market = new MarketSimulator();
         RiskAnalyser risk = new RiskAnalyser();
-        Strategy_Manager strategy = new Strategy_Manager(simulator, risk, "Strat A");
-        simulator.setStrategyManager(strategy);
+        StrategyManager strategy = new StrategyManager(market, "Strat A");
+        market.SetStrategyManager(strategy);
 
-        Backtesting_Engine engine = new Backtesting_Engine(simulator, risk, strategy);
+        BacktestingEngine engine = new BacktestingEngine(market, risk, strategy);
 
     }
 }

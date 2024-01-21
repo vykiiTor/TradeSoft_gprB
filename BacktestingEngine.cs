@@ -4,25 +4,25 @@ using System.Reflection;
 // Event arguments class to carry the data
 // https://stackoverflow.com/questions/15766219/ok-to-use-dataeventargstdata-instead-of-customized-event-data-class
 
-public class Backtesting_Engine
+public class BacktestingEngine
 {
-	private List<Ticks_Data> ticks = new List<Ticks_Data>();
+	private List<TicksData> ticks = new List<TicksData>();
 
-	private Market_Simulator market;
+	private MarketSimulator market;
 	private RiskAnalyser risk;
-	private Strategy_Manager strategy;
+	private StrategyManager strategy;
 	
-    public Backtesting_Engine(Market_Simulator market, RiskAnalyser risk, Strategy_Manager strategy,
+    public BacktestingEngine(MarketSimulator market, RiskAnalyser risk, StrategyManager strategy,
 		string filePath = "../../../tradesoft-ticks-sample.csv")
 	{
 		this.market = market;
 		this.risk = risk;
 		this.strategy = strategy;
-		ticks = Ticks_Data.csvToTicks(filePath);
+		ticks = TicksData.CsvToTicks(filePath);
 		foreach (var tick in ticks)
 		{
 			//Console.WriteLine("Senging :  "+tick.Price );
-			market.UpdateMarketPrice(tick.Price);
+			market.UpdateMarketPrice(tick.price);
 			strategy.RunStrategy();
 		}
 		risk.StrategyReport();
