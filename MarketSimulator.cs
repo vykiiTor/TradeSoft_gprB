@@ -6,7 +6,7 @@ public class MarketSimulator
 
     private List<Order> orders = new List<Order>();
 
-    internal StrategyManager StrategyManager;
+    internal StrategyManager strategyManager;
     internal RiskAnalyser riskAnalyser;
     public MarketSimulator()
     {
@@ -15,11 +15,11 @@ public class MarketSimulator
 
     public void SetStrategyManager (StrategyManager strategyManager)
     {
-        StrategyManager = strategyManager;
+        this.strategyManager = strategyManager;
     }
     public void SetRiskManager(RiskAnalyser riskAnalyser)
     {
-        riskAnalyser = riskAnalyser;
+        this.riskAnalyser = riskAnalyser;
     }
 
     public OrderExecReport ReceiveOrder(Order order)
@@ -37,6 +37,6 @@ public class MarketSimulator
 
     public void UpdateMarketPrice(Decimal price)
     {
-        currentMarketPrice = price;
+        this.currentMarketPrice = price;
     }
 }

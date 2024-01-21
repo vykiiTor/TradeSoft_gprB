@@ -21,7 +21,7 @@ public class Order
         this.price = price;
     }
 
-    public string printOrder()
+    public string PrintOrder()
     {
         return "order " + typeOrder + " request done at " + time + " of " + quantity + " asset at " + price + "";
     }
@@ -49,7 +49,7 @@ public class OrderExecReport
 
     }
 
-    public string printOrder()
+    public string PrintOrder()
     {
         return "order " + typeOrder + " done at " + time + " of " + quantity + " asset at " + price + "";
     }

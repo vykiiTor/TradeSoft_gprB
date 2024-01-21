@@ -15,8 +15,6 @@ public class TicksData
     internal long quantity { get; set; }
     internal decimal price { get; set; }
 
-
-
     public TicksData()
     {
         time = DateTime.MinValue;
@@ -72,7 +70,6 @@ public class TicksData
 
 
 }
-
 public class OHCL_Data
 {
     private DateTime time { get; set; }
@@ -85,7 +82,6 @@ public class OHCL_Data
     {
         time = DateTime.MinValue; open = -1; high = -1; close = -1; low = -1;
     }
-
     public OHCL_Data(DateTime time, decimal open, decimal high, decimal close, decimal low)
     {
         this.time = time;
@@ -103,7 +99,6 @@ public class OHCL_Data
         this.close = -1;
         this.low = open;
     }
-
     // Transform ticks (List<TicksData>) into an OHCL of period (milliseconds)
     public static List<OHCL_Data> TicksToOHCL(List<TicksData> ticks, long period)
     {
