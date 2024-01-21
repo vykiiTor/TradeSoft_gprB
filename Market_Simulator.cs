@@ -1,8 +1,8 @@
 ﻿using System;
 
-public class Market_Simulator : TicksReceptor
+public class Market_Simulator
 {
-	private decimal CurrentMarketPrice = -1;
+	private decimal currentMarketPrice = -1;
 
     private List<Order> orders = new List<Order>();
     private List<Order> ordersLog = new List<Order>();
@@ -17,22 +17,7 @@ public class Market_Simulator : TicksReceptor
     {
         StrategyManager = strategyManager;
     }
-
-    public override void DataReception(Object sender, ObjectEventArgs<Ticks_Data> e)
-    {
-        Thread market = new Thread(() =>
-        {
-            this.getSyncObject().WaitOne();
-            //Console.WriteLine($"Received Time: {e.Tick.Time} and received Price : {e.Tick.Price}");
-            getObjectList().Add(e.Data);
-            CurrentMarketPrice = ((Ticks_Data)e.Data).Price;
-            //Console.WriteLine(" ticks price : " + getObjectList().Last().Price);
-			//Console.WriteLine("Current price : " + CurrentMarketPrice);
-            this.getSyncObject().Release();
-        });
-        market.Start();
-    }
-
+    
     public Order receiveOrder(Order order)
     {
         orders.Add(order);
@@ -40,11 +25,16 @@ public class Market_Simulator : TicksReceptor
         Order orderlog = new Order();
         if (order.typeOrder == TypeOrder.Market)
         {
-            StrikePrice = this.CurrentMarketPrice;
+            StrikePrice = this.currentMarketPrice;
             orderlog = new Order(DateTime.Now, order.Quantity, order.typeOrder, order.Striker, StrikePrice);
         }
         ordersLog.Add(orderlog);
         return (orderlog);
+    }
+
+    public void UpdateMarketPrice(Decimal price)
+    {
+        currentMarketPrice = price;
     }
 }
 

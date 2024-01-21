@@ -1,6 +1,6 @@
 ﻿using System;
 
-public class RiskAnalyser : TicksReceptor
+public class RiskAnalyser
 {
     private List<Order> OrdersLog = new List<Order>();
     private Portfolio Portfolio;
