@@ -1,39 +1,42 @@
 public class Portfolio // We assess that, in our case, a portfolio can handle only one asset at once
 {
-    internal decimal Cash;
-    internal decimal InitialCash;
-    internal long Quantity;
+    private decimal cash;
+    private decimal initialCash;
+    private long quantity;
 
     public Portfolio (decimal cash)
     {
-        this.Cash = cash;
-        InitialCash = cash;
-        this.Quantity = 0;
+        this.cash = cash;
+        initialCash = cash;
+        quantity = 0;
 
     }
-
-    public decimal getCash()
+    public decimal GetCash()
     {
-        return this.Cash;
+        return cash;
     }
-    public long getQuantity()
+    public long GetQuantity()
     {
-        return this.Quantity;
+        return quantity;
+    }
+    public decimal GetInitialCash()
+    {
+        return initialCash;
     }
     public void ProcessOrder (Order order)
     {
-        lock (this)
+        lock (this)//check this lock cuz not thread
         {
-            Quantity += order.Quantity;
-            if (Quantity > 0)
+            quantity += order.quantity;
+            if (quantity > 0)
             {
-                Cash -= order.Quantity * order.Price;
+                cash -= order.quantity * order.price;
             }
-            else if (Quantity < 0)
+            else if (quantity < 0)
             {
-                Cash += order.Quantity * order.Price;
+                cash += order.quantity * order.price;
             }
-            Console.WriteLine("Cash du portefeuille : " + Cash + " ; quantite du portefeuille : " + Quantity);
+            Console.WriteLine("Cash du portefeuille : " + cash + " ; quantite du portefeuille : " + quantity);
         }
     }
 
