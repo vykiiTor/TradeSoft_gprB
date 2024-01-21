@@ -99,12 +99,12 @@ public class OHCLData
     {
         this.time = time;
         this.open = open;
-        this.high = high;
+        this.high = open;
         this.close = -1;
-        this.low = low;
+        this.low = open;
     }
 
-    // Transform ticks (List<Ticks_Data>) into an OHCL of period (milliseconds)
+    // Transform ticks (List<TicksData>) into an OHCL of period (milliseconds)
     public static List<OHCLData> TicksToOHCL(List<TicksData> ticks, long period)
     {
         List<OHCLData> ohclDatas = new List<OHCLData>();
@@ -127,7 +127,7 @@ public class OHCLData
 
             });
 
-        // Print the grouped Ticks_Data
+        // Print the grouped TicksData
         foreach (var group in groupedTicksData)
         {
             ohclDatas.Add(new OHCLData(group.startTime, group.openPrice, group.highPrice, group.closePrice, group.lowPrice));
@@ -156,9 +156,9 @@ public class OHCLData
     {
         // console testing
         String path = "../../../tradesoft-ticks-sample.csv";
-        List<Ticks_Data> list = Ticks_Data.csvToTicks(path);
-        List<OHCLData> OHCLDatas = OHCLData.TicksToOHCL(list, 1000 * 60 * 15);
-        OHCLData.PrintOHCLList(OHCLDatas);
+        List<TicksData> list = TicksData.CsvToTicks(path);
+        List<OHCLData> ohclDatas = OHCLData.TicksToOHCL(list, 1000 * 60 * 15);
+        ohclData.PrintOHCLList(ohclDatas);
     }*/
 }
 

@@ -2,7 +2,7 @@
 
 public class RiskAnalyser
 {
-    private List<Order> ordersLog = new List<Order>();
+    private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
     private Portfolio portfolio;
     public RiskAnalyser()
 	{
@@ -13,7 +13,7 @@ public class RiskAnalyser
         return portfolio;
     }
 
-    public List<Order> GetOrdersLog ()
+    public List<OrderExecReport> GetOrdersLog ()
     {
         return ordersLog;
     }

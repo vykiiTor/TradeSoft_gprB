@@ -5,9 +5,10 @@ public class MarketSimulator
 	private decimal currentMarketPrice = -1;
 
     private List<Order> orders = new List<Order>();
-    private List<Order> ordersLog = new List<Order>();
 
     private StrategyManager strategyManager;
+    internal RiskAnalyser riskAnalyser;
+
     public MarketSimulator()
     {
 
@@ -17,57 +18,26 @@ public class MarketSimulator
     {
         this.strategyManager = strategyManager;
     }
-    
-    public Order ReceiveOrder(Order order)
+    public void SetRiskManager(RiskAnalyser riskAnalyser)
+    {
+        this.riskAnalyser = riskAnalyser;
+    }
+
+    public OrderExecReport ReceiveOrder(Order order)
     {
         orders.Add(order);
-        decimal strikePrice = -1;
-        Order orderLog = new Order();
+        decimal OrderPrice = -1;
+        OrderExecReport orderlog = new OrderExecReport();
         if (order.typeOrder == TypeOrder.Market)
         {
-            strikePrice = currentMarketPrice;
-            orderLog = new Order(DateTime.Now, order.quantity, order.typeOrder, order.striker, strikePrice);
+            OrderPrice = this.currentMarketPrice;
+            orderlog = new OrderExecReport("1", DateTime.Now, order.quantity, order.typeOrder, OrderPrice);
         }
-        ordersLog.Add(orderLog);
-        return (orderLog);
+        return (orderlog);
     }
 
     public void UpdateMarketPrice(Decimal price)
     {
         currentMarketPrice = price;
     }
-}
-
-public class Order
-{
-    //modif to private later
-    internal DateTime time { get; set; }
-    internal long quantity { get; set; }
-    internal TypeOrder typeOrder { get; set; }
-    internal decimal price { get; set; }
-    internal string striker { get; set; }
-
-    public Order ()
-    {
-
-    }
-    public Order (DateTime time, long quantity, TypeOrder typeOrder, string striker, decimal price=0)
-	{
-		this.time = time;
-        this.quantity = quantity;
-        this.typeOrder = typeOrder;
-        this.price = price;
-        this.striker = striker;
-	}
-
-    public string printOrder()
-    {
-        return "order from "+striker+" done at "+time+" of "+quantity+" asset at "+price+"";
-    }
-    
-}
-
-public enum TypeOrder
-{
-	Market
 }
