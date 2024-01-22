@@ -45,7 +45,7 @@ public class TicksData
         }
     }
 
-    // transform a csv file (with ',' separator) into a List<Ticks_Data>
+    // TO be removed
     public static List<TicksData> CsvToTicks(String filepath)
     {
         List<TicksData> ticksDatas = new List<TicksData>();
