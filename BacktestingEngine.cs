@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 
 // Event arguments class to carry the data
@@ -8,7 +9,7 @@ public class BacktestingEngine
 {
 	private List<TicksData> ticks = new List<TicksData>();
 
-	private MarketSimulator market;
+	private MarketSimulator market { get; set; }
 	private RiskAnalyser risk;
 	private StrategyManager strategy;
 	
@@ -18,23 +19,53 @@ public class BacktestingEngine
 		this.market = market;
 		this.risk = risk;
 		this.strategy = strategy;
-		ticks = TicksData.CsvToTicks(filePath);
-		foreach (var tick in ticks)
+		CsvToTicks(filePath);
+		
+		
+		//to be removed
+		/*foreach (var tick in ticks)
 		{
 			//Console.WriteLine("Senging :  "+tick.price );
-			market.UpdateMarketPrice(tick.price);
-			strategy.RunStrategy();
+			this.market.UpdateMarketPrice(tick.price);
+			this.strategy.RunStrategy();
 		}
-		risk.StrategyReport();
+		this.risk.StrategyReport();
 
-        /*List<TicksData> test = new List<TicksData>();
+        List<TicksData> test = new List<TicksData>();
         for (int i = 0; i < 10000; i++)
         {
             test.Add(new TicksData(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
 		Ticks = test;*/
-        
 	}
-    //getList
-    //getListAtoB //past only
+    public  void CsvToTicks(String filePath)
+    {
+	    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+	    using (StreamReader reader = new StreamReader(fileStream))
+	    {
+		    reader.ReadLine();
+
+		    string line;
+		    while ((line = reader.ReadLine()) != null)
+		    {
+			    ProcessCsvLine(line);
+		    }
+	    }
+    }
+    
+    public void ProcessCsvLine(string csvLine)
+    {
+	    string[] columns = csvLine.Split(',');
+	    
+	    //revoir la list 
+	    List<TicksData> ticksDatas = new List<TicksData>();
+	    TicksData data = new TicksData(
+		    DateTime.ParseExact(columns[0], "mm:ss.f", null),
+		    Int32.Parse(columns[2]),
+		    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
+	    ticksDatas.Add(data);
+	    
+	    market.UpdateMarketPrice(data.price);
+	    strategy.RunStrategy();
+    }
 }
