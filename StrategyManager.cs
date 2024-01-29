@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using TradeSoft_gprB;
 
 public class StrategyManager
 {
@@ -9,6 +10,7 @@ public class StrategyManager
     private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
     public List<OrderExecReport> GetOrdersLog () {  return ordersLog; }
     private string strategyName;
+    private ItStrategy _strategy;
 
 
 
@@ -28,13 +30,16 @@ public class StrategyManager
 
     public void RunStrategy()
     {
+	    _strategy.ApplyStrategy(portfolio);
+	    
+	    //to be removed 
         int quantity = ApplyStrategy();
         if (quantity != 0)
         {
+	        //from order in strat manager -> buy in market without building the order, just give the quantity and id
             Order order = new Order("1", DateTime.Now, quantity, TypeOrder.Market);
             OrderExecReport orderLog = market.ReceiveOrder(order);
             ordersLog.Add(orderLog); portfolio.ProcessOrder(orderLog);
-            //Console.WriteLine(orderLog.PrintOrder());
         }
     }
 }

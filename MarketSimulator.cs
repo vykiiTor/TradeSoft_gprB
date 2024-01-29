@@ -22,7 +22,9 @@ public class MarketSimulator
     {
         this.riskAnalyser = riskAnalyser;
     }
-
+    
+    //receive order and put into a data structure 
+    //private
     public OrderExecReport ReceiveOrder(Order order)
     {
         orders.Add(order);
@@ -36,8 +38,13 @@ public class MarketSimulator
         return (orderlog);
     }
 
+    //list of order 
+    //check if order are for this price act accordingly
+    //send back info
     public void UpdateMarketPrice(Decimal price)
     {
         currentMarketPrice = price;
     }
+    
+    // new method for buying and selling that uses the data from receive order
 }
