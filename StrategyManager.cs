@@ -56,6 +56,7 @@ public class Strategy : IStrategy
     // return the quantity to buy to its not conveniant
     public void RunStrategy (MarketSimulator market)
     {
+        //from order in strat manager -> buy in market without building the order, just give the quantity and i
         // check if the strat needs to do an action
         Order order = new Order("1", DateTime.Now, 1, TypeOrder.Market);
         OrderExecReport OrderExec = market.ProcessOrder(order);

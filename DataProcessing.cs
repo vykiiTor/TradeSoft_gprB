@@ -16,7 +16,6 @@ public class TicksData
     internal decimal price { get; set; }
 
 
-
     public TicksData()
     {
         time = DateTime.MinValue;
@@ -45,35 +44,39 @@ public class TicksData
         }
     }
     
-    
-    public static void CsvToTicks(String filePath)
+    private static IEnumerable<String> ReadFile(String filePath = "../../../tradesoft-ticks-sample.csv")
     {
         using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
         using (StreamReader reader = new StreamReader(fileStream))
         {
             reader.ReadLine();
-
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            String fileLine;
+            while ((fileLine = reader.ReadLine()) != null)
             {
-                ProcessCsvLine(line);//bye into -> yield return line
+                yield return fileLine;// into -> yield return line
             }
         }
     }
-    
-    public static void ProcessCsvLine(string csvLine) //IEnnumerable to tickdata
+
+    public static IEnumerable<TicksData> BuildEnum()
     {
-        string[] columns = csvLine.Split(',');
-	    
-        //revoir la list 
-        //List<TicksData> ticksDatas = new List<TicksData>();
-        TicksData data = new TicksData(
-            DateTime.ParseExact(columns[0], "mm:ss.f", null),
-            Int32.Parse(columns[2]),
-            decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-        //ticksDatas.Add(data);
-	    
-        
+        IEnumerable<string> lines = ReadFile();
+        IEnumerable<TicksData> fullData = ProcessCsvLine(lines);
+        return fullData;
+    }
+
+    private static IEnumerable<TicksData> ProcessCsvLine(IEnumerable<String> csvLine) //IEnnumerable to tickdata 
+    {
+        IEnumerable<TicksData> fullData;
+        foreach (var line in csvLine)
+        {
+            string[] columns = line.Split(',');
+            TicksData data = new TicksData(
+                DateTime.ParseExact(columns[0], "mm:ss.f", null),
+                Int32.Parse(columns[2]),
+                decimal.Parse(columns[3], CultureInfo.InvariantCulture));
+            yield return data;
+        }
     }
 
 
