@@ -25,38 +25,15 @@ public class BacktestingEngine
 		 *  market.UpdateMarketPrice(data.price);
 		   	    strategy.RunStrategy();
 		 */
-		CsvToTicks(filePath);
+		//to check above 
+		TicksData.CsvToTicks(filePath);
+		
+		
+		// to update
+		//market.UpdateMarketPrice(data.price);
+		//strategy.RunStategies();
 
 
-    }
-    public  void CsvToTicks(String filePath)
-    {
-	    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-	    using (StreamReader reader = new StreamReader(fileStream))
-	    {
-		    reader.ReadLine();
-
-		    string line;
-		    while ((line = reader.ReadLine()) != null)
-		    {
-			    ProcessCsvLine(line);//bye into -> yield return line
-		    }
-	    }
     }
     
-    public void ProcessCsvLine(string csvLine) //IEnnumerable to tickdata
-    {
-	    string[] columns = csvLine.Split(',');
-	    
-	    //revoir la list 
-	    //List<TicksData> ticksDatas = new List<TicksData>();
-	    TicksData data = new TicksData(
-		    DateTime.ParseExact(columns[0], "mm:ss.f", null),
-		    Int32.Parse(columns[2]),
-		    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-	    //ticksDatas.Add(data);
-	    
-	    market.UpdateMarketPrice(data.price);//bye
-        strategy.RunStategies();
-    }
 }

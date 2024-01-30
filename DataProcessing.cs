@@ -44,30 +44,36 @@ public class TicksData
             Console.WriteLine(t.ToString());
         }
     }
-
-    // TO be removed
-    public static List<TicksData> CsvToTicks(String filepath)
+    
+    
+    public  void CsvToTicks(String filePath)
     {
-        List<TicksData> ticksDatas = new List<TicksData>();
-
-        // http://dotnet-tutorials.net/Article/read-a-csv-file-in-csharp
-        string[] lines = System.IO.File.ReadAllLines(filepath);
-        foreach (string line in lines)
+        using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+        using (StreamReader reader = new StreamReader(fileStream))
         {
-            // check if the line is not a header
-            if (!Regex.IsMatch(line, @"^[a-zA-Z,]+$"))
-            {
+            reader.ReadLine();
 
-                string[] columns = line.Split(',');
-                TicksData data = new TicksData(
-                    DateTime.ParseExact(columns[0], "mm:ss.f", null),
-                    Int32.Parse(columns[2]),
-                    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-                ticksDatas.Add(data);
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                ProcessCsvLine(line);//bye into -> yield return line
             }
         }
-
-        return ticksDatas;
+    }
+    
+    public void ProcessCsvLine(string csvLine) //IEnnumerable to tickdata
+    {
+        string[] columns = csvLine.Split(',');
+	    
+        //revoir la list 
+        //List<TicksData> ticksDatas = new List<TicksData>();
+        TicksData data = new TicksData(
+            DateTime.ParseExact(columns[0], "mm:ss.f", null),
+            Int32.Parse(columns[2]),
+            decimal.Parse(columns[3], CultureInfo.InvariantCulture));
+        //ticksDatas.Add(data);
+	    
+        
     }
 
 
