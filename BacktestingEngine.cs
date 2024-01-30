@@ -22,27 +22,12 @@ public class BacktestingEngine
 		
 		//for IEnumerable do 
 		/*
-		 *  market.UpdateMarketPrice(data.price);//bye
+		 *  market.UpdateMarketPrice(data.price);
 		   	    strategy.RunStrategy();
 		 */
 		CsvToTicks(filePath);
 
 
-        //to be removed
-        /*foreach (var tick in ticks)
-		{
-			//Console.WriteLine("Senging :  "+tick.price );
-			this.market.UpdateMarketPrice(tick.price);
-			this.strategy.RunStrategy();
-		}
-		this.risk.StrategyReport();
-
-        List<TicksData> test = new List<TicksData>();
-        for (int i = 0; i < 10000; i++)
-        {
-            test.Add(new TicksData(DateTime.MinValue.AddSeconds(i), 1, i));
-        } //for testing purpose
-		Ticks = test;*/
     }
     public  void CsvToTicks(String filePath)
     {

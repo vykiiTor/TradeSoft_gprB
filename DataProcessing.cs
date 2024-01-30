@@ -151,15 +151,6 @@ public class OHCLData
             Console.WriteLine(d.ToString());
         }
     }
-
-    /*public static void Main(string[] args)
-    {
-        // console testing
-        String path = "../../../tradesoft-ticks-sample.csv";
-        List<TicksData> list = TicksData.CsvToTicks(path);
-        List<OHCLData> ohclDatas = OHCLData.TicksToOHCL(list, 1000 * 60 * 15);
-        ohclData.PrintOHCLList(ohclDatas);
-    }*/
 }
 
 
