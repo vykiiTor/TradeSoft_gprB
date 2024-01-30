@@ -46,7 +46,7 @@ public class TicksData
     }
     
     
-    public  void CsvToTicks(String filePath)
+    public static void CsvToTicks(String filePath)
     {
         using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
         using (StreamReader reader = new StreamReader(fileStream))
@@ -61,7 +61,7 @@ public class TicksData
         }
     }
     
-    public void ProcessCsvLine(string csvLine) //IEnnumerable to tickdata
+    public static void ProcessCsvLine(string csvLine) //IEnnumerable to tickdata
     {
         string[] columns = csvLine.Split(',');
 	    
