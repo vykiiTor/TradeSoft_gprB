@@ -4,7 +4,6 @@ public class MarketSimulator
 {
 	private decimal currentMarketPrice = -1;
 
-    private List<Order> orders = new List<Order>();
 
     private StrategyManager strategyManager;
     internal RiskAnalyser riskAnalyser;
@@ -25,9 +24,8 @@ public class MarketSimulator
     
     //receive order and put into a data structure 
     //private
-    public OrderExecReport ReceiveOrder(Order order)
+    public OrderExecReport ProcessOrder(Order order)
     {
-        orders.Add(order);
         decimal OrderPrice = -1;
         OrderExecReport orderlog = new OrderExecReport();
         if (order.typeOrder == TypeOrder.Market)
@@ -35,6 +33,7 @@ public class MarketSimulator
             OrderPrice = this.currentMarketPrice;
             orderlog = new OrderExecReport("1", DateTime.Now, order.quantity, order.typeOrder, OrderPrice);
         }
+        // send orderLog to risk
         return (orderlog);
     }
 

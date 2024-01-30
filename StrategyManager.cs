@@ -4,8 +4,6 @@ using System.Diagnostics;
 public class StrategyManager
 {
 	private MarketSimulator market;
-    private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
-    public List<OrderExecReport> GetOrdersLog () {  return ordersLog; }
 
     public List<Strategy> strategies = new List<Strategy>();
     
@@ -29,14 +27,7 @@ public class StrategyManager
     {
         foreach (Strategy strategy in strategies)
         {
-            int quantityToBuy = strategy.run();
-            if (quantityToBuy != 0)
-            {
-                Order order = new Order("1", DateTime.Now, quantityToBuy, TypeOrder.Market);
-                OrderExecReport orderLog = market.ReceiveOrder(order);
-                ordersLog.Add(orderLog); strategy.portfolio.ProcessOrder(orderLog);
-                //Console.WriteLine(orderLog.PrintOrder());
-            }
+            strategy.RunStrategy(market);
 
             // send ticks
             // wait to receive an Order from the Strategy
@@ -48,13 +39,13 @@ public class StrategyManager
 
 public interface IStrategy
 {
-    public int run();
+    public void RunStrategy(MarketSimulator market);
 }
 
 public class Strategy : IStrategy
 {
     internal String strategyName;
-    internal Portfolio portfolio;
+    private Portfolio portfolio;
 
     public Strategy (String strategyName)
     {
@@ -63,12 +54,12 @@ public class Strategy : IStrategy
     }
 
     // return the quantity to buy to its not conveniant
-    public int run ()
+    public void RunStrategy (MarketSimulator market)
     {
-        if (portfolio.GetCash() >= 0)
-            // return asset quantity to buy
-            return -1;
-        return 0;
+        // check if the strat needs to do an action
+        Order order = new Order("1", DateTime.Now, 1, TypeOrder.Market);
+        OrderExecReport OrderExec = market.ProcessOrder(order);
+        portfolio.ProcessOrder(OrderExec);
     }
 
 }
