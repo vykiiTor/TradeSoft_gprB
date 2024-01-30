@@ -26,10 +26,10 @@ public class BacktestingEngine
 		   	    strategy.RunStrategy();
 		 */
 		CsvToTicks(filePath);
-		
-		
-		//to be removed
-		/*foreach (var tick in ticks)
+
+
+        //to be removed
+        /*foreach (var tick in ticks)
 		{
 			//Console.WriteLine("Senging :  "+tick.price );
 			this.market.UpdateMarketPrice(tick.price);
@@ -43,7 +43,7 @@ public class BacktestingEngine
             test.Add(new TicksData(DateTime.MinValue.AddSeconds(i), 1, i));
         } //for testing purpose
 		Ticks = test;*/
-	}
+    }
     public  void CsvToTicks(String filePath)
     {
 	    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
@@ -72,6 +72,6 @@ public class BacktestingEngine
 	    //ticksDatas.Add(data);
 	    
 	    market.UpdateMarketPrice(data.price);//bye
-	    strategy.RunStrategy();
+        strategy.RunStategies();
     }
 }
