@@ -16,7 +16,6 @@ public class TicksData
     internal decimal price { get; set; }
 
 
-
     public TicksData()
     {
         time = DateTime.MinValue;
@@ -44,30 +43,40 @@ public class TicksData
             Console.WriteLine(t.ToString());
         }
     }
-
-    // TO be removed
-    public static List<TicksData> CsvToTicks(String filepath)
+    
+    private static IEnumerable<String> ReadFile(String filePath = "../../../tradesoft-ticks-sample.csv")
     {
-        List<TicksData> ticksDatas = new List<TicksData>();
-
-        // http://dotnet-tutorials.net/Article/read-a-csv-file-in-csharp
-        string[] lines = System.IO.File.ReadAllLines(filepath);
-        foreach (string line in lines)
+        using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
+        using (StreamReader reader = new StreamReader(fileStream))
         {
-            // check if the line is not a header
-            if (!Regex.IsMatch(line, @"^[a-zA-Z,]+$"))
+            reader.ReadLine();
+            String fileLine;
+            while ((fileLine = reader.ReadLine()) != null)
             {
-
-                string[] columns = line.Split(',');
-                TicksData data = new TicksData(
-                    DateTime.ParseExact(columns[0], "mm:ss.f", null),
-                    Int32.Parse(columns[2]),
-                    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-                ticksDatas.Add(data);
+                yield return fileLine;// into -> yield return line
             }
         }
+    }
 
-        return ticksDatas;
+    public static IEnumerable<TicksData> BuildEnum()
+    {
+        IEnumerable<string> lines = ReadFile();
+        IEnumerable<TicksData> fullData = ProcessCsvLine(lines);
+        return fullData;
+    }
+
+    private static IEnumerable<TicksData> ProcessCsvLine(IEnumerable<String> csvLine) //IEnnumerable to tickdata 
+    {
+        IEnumerable<TicksData> fullData;
+        foreach (var line in csvLine)
+        {
+            string[] columns = line.Split(',');
+            TicksData data = new TicksData(
+                DateTime.ParseExact(columns[0], "mm:ss.f", null),
+                Int32.Parse(columns[2]),
+                decimal.Parse(columns[3], CultureInfo.InvariantCulture));
+            yield return data;
+        }
     }
 
 
@@ -151,15 +160,6 @@ public class OHCLData
             Console.WriteLine(d.ToString());
         }
     }
-
-    /*public static void Main(string[] args)
-    {
-        // console testing
-        String path = "../../../tradesoft-ticks-sample.csv";
-        List<TicksData> list = TicksData.CsvToTicks(path);
-        List<OHCLData> ohclDatas = OHCLData.TicksToOHCL(list, 1000 * 60 * 15);
-        ohclData.PrintOHCLList(ohclDatas);
-    }*/
 }
 
 

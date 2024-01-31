@@ -4,37 +4,63 @@ using System.Diagnostics;
 public class StrategyManager
 {
 	private MarketSimulator market;
-    private Portfolio portfolio;
 
-    private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
-    public List<OrderExecReport> GetOrdersLog () {  return ordersLog; }
-    private string strategyName;
+    public List<Strategy> strategies = new List<Strategy>();
+    
+
+
+    /* run fonction that output an order
+     * each strategy will have a portofolio assiociated, how is risk manager assiociated
+     * strategy manager will handle ticks data and order sending/reception
+     */
 
 
 
     public StrategyManager(MarketSimulator market, RiskAnalyser risk, string strategyName)
 	{
 		this.market = market;
-		this.strategyName = strategyName;
-        this.portfolio = new Portfolio(1000);
-    }
-    public int ApplyStrategy ()
-    {
-	    if(portfolio.GetCash() >= 0)
-		    // return asset quantity to buy
-		    return -1;
-        return 0;
+        Strategy stratA = new Strategy("StratA");
+        strategies.Add(stratA);
     }
 
-    public void RunStrategy()
+    public void RunStategies ()
     {
-        int quantity = ApplyStrategy();
-        if (quantity != 0)
+        foreach (Strategy strategy in strategies)
         {
-            Order order = new Order("1", DateTime.Now, quantity, TypeOrder.Market);
-            OrderExecReport orderLog = market.ReceiveOrder(order);
-            ordersLog.Add(orderLog); portfolio.ProcessOrder(orderLog);
-            //Console.WriteLine(orderLog.PrintOrder());
+            strategy.RunStrategy(market);
+
+            // send ticks
+            // wait to receive an Order from the Strategy
+            // send the OrderExecReport to the strategy
         }
     }
+    
+}
+
+public interface IStrategy
+{
+    public void RunStrategy(MarketSimulator market);
+}
+
+public class Strategy : IStrategy
+{
+    internal String strategyName;
+    private Portfolio portfolio;
+
+    public Strategy (String strategyName)
+    {
+        this.strategyName = strategyName;
+        this.portfolio = new Portfolio (1000);
+    }
+
+    // return the quantity to buy to its not conveniant
+    public void RunStrategy (MarketSimulator market)
+    {
+        //from order in strat manager -> buy in market without building the order, just give the quantity and i
+        // check if the strat needs to do an action
+        Order order = new Order("1", DateTime.Now, 1, TypeOrder.Market);
+        OrderExecReport OrderExec = market.ProcessOrder(order);
+        portfolio.ProcessOrder(OrderExec);
+    }
+
 }

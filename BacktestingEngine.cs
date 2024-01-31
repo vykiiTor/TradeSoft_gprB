@@ -19,53 +19,22 @@ public class BacktestingEngine
 		this.market = market;
 		this.risk = risk;
 		this.strategy = strategy;
-		CsvToTicks(filePath);
 		
-		
-		//to be removed
-		/*foreach (var tick in ticks)
+		//foreach IEnumerable do 
+		/*
+		 *  market.UpdateMarketPrice(data.price);
+		   	    strategy.RunStrategy();
+		 */
+		//to check above 
+		IEnumerable<TicksData> ticks = TicksData.BuildEnum();
+		foreach (var tick in ticks)
 		{
-			//Console.WriteLine("Senging :  "+tick.price );
-			this.market.UpdateMarketPrice(tick.price);
-			this.strategy.RunStrategy();
+			market.UpdateMarketPrice(tick.price);
+			strategy.RunStategies();
 		}
-		this.risk.StrategyReport();
-
-        List<TicksData> test = new List<TicksData>();
-        for (int i = 0; i < 10000; i++)
-        {
-            test.Add(new TicksData(DateTime.MinValue.AddSeconds(i), 1, i));
-        } //for testing purpose
-		Ticks = test;*/
-	}
-    public  void CsvToTicks(String filePath)
-    {
-	    using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
-	    using (StreamReader reader = new StreamReader(fileStream))
-	    {
-		    reader.ReadLine();
-
-		    string line;
-		    while ((line = reader.ReadLine()) != null)
-		    {
-			    ProcessCsvLine(line);
-		    }
-	    }
+		// to update
+		//market.UpdateMarketPrice(data.price);
+		//strategy.RunStategies();
     }
     
-    public void ProcessCsvLine(string csvLine)
-    {
-	    string[] columns = csvLine.Split(',');
-	    
-	    //revoir la list 
-	    List<TicksData> ticksDatas = new List<TicksData>();
-	    TicksData data = new TicksData(
-		    DateTime.ParseExact(columns[0], "mm:ss.f", null),
-		    Int32.Parse(columns[2]),
-		    decimal.Parse(columns[3], CultureInfo.InvariantCulture));
-	    ticksDatas.Add(data);
-	    
-	    market.UpdateMarketPrice(data.price);
-	    strategy.RunStrategy();
-    }
 }
