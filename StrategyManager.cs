@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using Serilog;
+
 
 public class StrategyManager
 {
@@ -12,6 +14,7 @@ public class StrategyManager
     /* run fonction that output an order
      * each strategy will have a portofolio assiociated, how is risk manager assiociated
      * strategy manager will handle ticks data and order sending/reception
+     * 
      */
 
 
