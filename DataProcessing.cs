@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Globalization;
+using Serilog;
+
 
 public class TicksData
 {

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using Serilog;
+
 
 public class StrategyManager
 {
