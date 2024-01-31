@@ -4,6 +4,7 @@ public class MarketSimulator
 {
 	private decimal currentMarketPrice = -1;
 
+    private List<Order> orders = new List<Order>();
 
     private StrategyManager strategyManager;
     internal RiskAnalyser riskAnalyser;
@@ -24,9 +25,10 @@ public class MarketSimulator
     
     //receive order and put into a data structure 
     //private
-    public OrderExecReport ProcessOrder(Order order)
+    public void ProcessOrder(Order order)
     {
-        decimal OrderPrice = -1;
+        orders.Add(order);
+        /*decimal OrderPrice = -1;
         OrderExecReport orderlog = new OrderExecReport();
         if (order.typeOrder == TypeOrder.Market)
         {
@@ -34,7 +36,7 @@ public class MarketSimulator
             orderlog = new OrderExecReport("1", DateTime.Now, order.quantity, order.typeOrder, OrderPrice);
         }
         // send orderLog to risk
-        return (orderlog);
+        return (orderlog);*/
     }
 
     //list of order 
@@ -43,7 +45,39 @@ public class MarketSimulator
     public void UpdateMarketPrice(Decimal price)
     {
         currentMarketPrice = price;
+
+        // Process orders
+        OrderExecReport report = new OrderExecReport();
+        foreach (Order order in orders) {
+            if (order.quantity < 0) 
+            {
+                order.price = price;
+                report = Sell(order);          
+            }
+            else if (order.quantity>0) {
+                order.price = price;
+                report = Buy(order);
+            }
+            if (report != null)
+            {
+                strategyManager.GetStrategy(order.strategyId).processOrderExecReport(report);
+            }
+        }
     }
-    
+
+    public decimal GetMarketPrice()
+    {
+        return currentMarketPrice;
+    }
+
     // new method for buying and selling that uses the data from receive order
+    private static OrderExecReport Buy (Order order)
+    {
+        return new OrderExecReport (order.strategyId, DateTime.Now, order.quantity, TypeOrder.Market, order.price);
+    }
+
+    private static OrderExecReport Sell (Order order)
+    {
+        return new OrderExecReport(order.strategyId, DateTime.Now, order.quantity, TypeOrder.Market, order.price);
+    }
 }

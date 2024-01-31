@@ -2,7 +2,7 @@
 
 public class Order
 {
-    internal string assetId { get; set; }
+    internal int strategyId { get; set; }
     internal DateTime time { get; set; }
     internal int quantity { get; set; }
     internal TypeOrder typeOrder { get; set; }
@@ -12,9 +12,9 @@ public class Order
     {
 
     }
-    public Order(string assetId, DateTime time, int quantity, TypeOrder type_order, decimal price = 0)
+    public Order(int strategyId, DateTime time, int quantity, TypeOrder type_order, decimal price = 0)
     {
-        this.assetId = assetId;
+        this.strategyId = strategyId;
         this.time = time;
         this.quantity = quantity;
         this.typeOrder = type_order;
@@ -23,22 +23,22 @@ public class Order
 
     public string PrintOrder()
     {
-        return "order " + typeOrder + " request done at " + time + " of " + quantity + " asset at " + price + "";
+        return "order " + typeOrder + " from " + strategyId + " request done at " + time + " of " + quantity + " asset at " + price + "";
     }
 
 }
 
 public class OrderExecReport
 {
-    internal string assetId { get; set; }
+    internal int strategyId { get; set; }
     internal DateTime time { get; set; }
     internal int quantity { get; set; }
     internal TypeOrder typeOrder { get; set; }
     internal decimal price { get; set; }
 
-    public OrderExecReport(string assetId, DateTime time, int quantity, TypeOrder type_order, decimal price = 0)
+    public OrderExecReport(int strategyId, DateTime time, int quantity, TypeOrder type_order, decimal price = 0)
     {
-        this.assetId = assetId;
+        this.strategyId= strategyId;
         this.time = time;
         this.quantity = quantity;
         this.typeOrder = type_order;
