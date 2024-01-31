@@ -12,14 +12,12 @@ public class Portfolio
         internal readonly int positionId;
         internal readonly decimal price;
         internal int quantity;
-        internal readonly string assetId;
 
         public Position(int positionId, decimal price, int quantity)
         {
             this.positionId = positionId;
             this.price = price;
             this.quantity = quantity;
-            this.assetId = assetId;
         }
     }
 
@@ -47,7 +45,7 @@ public class Portfolio
     }
 
     // we are here dealing only one asset, if dealing with multiple, add the assetId in parameter
-    public int getNbrPositions ()
+    public int getPositionsQuantity ()
     {
         int getNbrPositions = 0;
         foreach (Position position in positions)
@@ -55,6 +53,16 @@ public class Portfolio
             getNbrPositions += position.quantity;
         }
         return getNbrPositions;
+    }
+
+    public void PrintPortfolio ()
+    {
+        foreach (Position position in positions)
+        {
+            Console.WriteLine("PositionId : "+position.positionId+ 
+                " ; price : "+position.price+
+                " ; qtt : "+position.quantity);
+        }
     }
 
 }

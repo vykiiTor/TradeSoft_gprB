@@ -62,13 +62,15 @@ public class Strategy : IStrategy
         decimal newPrice = market.GetMarketPrice();
 
         // check if the strat needs to do an action
-        if (newPrice < 16 && portfolio.cash > 0)
+        if (newPrice < 16 && portfolio.cash > market.GetMarketPrice())
         {
+            //Console.WriteLine(" buying " + newPrice+" cash : "+ portfolio.cash+ " nbr pos : "+portfolio.getNbrPositions());
             market.ProcessOrder(new Order(strategyId, DateTime.Now, 1, TypeOrder.Market));
 
         }
-        else if (newPrice > 25) { }
+        else if (newPrice > 25 && portfolio.getPositionsQuantity() > 0)
         {
+            //Console.WriteLine(" selling " + newPrice + " cash : " + portfolio.cash + " nbr pos : " + portfolio.getNbrPositions());
             market.ProcessOrder(new Order(strategyId, DateTime.Now, -1, TypeOrder.Market));
         }
 
@@ -81,41 +83,50 @@ public class Strategy : IStrategy
 
     public void processOrderExecReport(OrderExecReport orderExecReport)
     {
-        // si c'est un achat
-            // on créer une position
         if (orderExecReport.quantity > 0)
         {
+            //Console.WriteLine(" je cree un ordre de qqt " + orderExecReport.quantity);
             Console.WriteLine("Buying " + orderExecReport.quantity + " asset " + orderExecReport.strategyId + " at " + orderExecReport.price + " ; portfolio cash : " + portfolio.cash);
-            portfolio.cash += orderExecReport.quantity * orderExecReport.price;
+            portfolio.cash -= orderExecReport.quantity * orderExecReport.price;
             portfolio.GetPositions().Add(new Position(GetNewPositionId(), orderExecReport.price, orderExecReport.quantity));
         }
-        // si c'est une vente
-        // on cherche 
         else if (orderExecReport.quantity < 0)
         {
-            int nbrPositionsInPortfolio = portfolio.getNbrPositions();
-            int quantityToSell = orderExecReport.quantity;
+            //Console.WriteLine(" process order " + portfolio.getPositionsQuantity());
+            int quantityToSell = -orderExecReport.quantity;
             Console.WriteLine("Selling " + quantityToSell + " asset " + orderExecReport.strategyId + " at " + orderExecReport.price + " ; portfolio cash : " + portfolio.cash);
-            for (int i = 0; i < portfolio.GetPositions().Count; i++)
+            for( int i=0; i<portfolio.GetPositions().Count;i++)
             {
-                // look if there is others positions to sell the asset (to not be blocked where only 50% of the order quantity can be sold)
-                if (portfolio.GetPositions()[i].quantity <= quantityToSell)
+                if (portfolio.GetPositions()[i].quantity > quantityToSell)
                 {
-                    quantityToSell -= portfolio.GetPositions()[i].quantity;
-                    portfolio.cash += portfolio.GetPositions()[i].quantity * orderExecReport.price;
-                    portfolio.GetPositions().RemoveAt(i);
-                    i--;
-                    if (quantityToSell == 0) break;
+                    //Console.WriteLine(" first " + portfolio.GetPositions()[i].quantity);
+                   // Console.WriteLine(" sec " + quantityToSell);
+                    //Console.WriteLine(" 1selling " + quantityToSell + " qqtPortfolio " + portfolio.getPositionsQuantity());
+                    Position tmp = portfolio.GetPositions()[i];
+                    portfolio.cash += quantityToSell * orderExecReport.price;
+                    //Console.WriteLine(" qtt av: " + portfolio.GetPositions()[i].quantity);
+                    portfolio.GetPositions()[i] = new Position(tmp.positionId, tmp.price, tmp.quantity + quantityToSell);
+                    //Console.WriteLine(" 1sold " + quantityToSell + " qqtPortfolio " + portfolio.getPositionsQuantity());
+                    //Console.WriteLine(" qtt ap: " + portfolio.GetPositions()[i].quantity);
+                    break;
                 }
                 else
                 {
-                    portfolio.cash += quantityToSell * orderExecReport.price;
-                    portfolio.GetPositions()[i] = new Position(portfolio.GetPositions()[i].positionId, portfolio.GetPositions()[i].price,
-                            portfolio.GetPositions()[i].quantity - quantityToSell);
-                    quantityToSell = 0;
+                    //Console.WriteLine(" 2selling " + portfolio.GetPositions()[i].quantity + " qqtPortfolio " + portfolio.getPositionsQuantity());
+                    quantityToSell -= portfolio.GetPositions()[i].quantity;
+                    portfolio.cash += portfolio.GetPositions()[i].quantity * orderExecReport.price;
+                    //Console.WriteLine("count avant " + portfolio.GetPositions().Count + " pos " + portfolio.getPositionsQuantity());
+                    //portfolio.PrintPortfolio();
+                    portfolio.GetPositions().RemoveAt(i);
+                    //Console.WriteLine("count apres " + portfolio.GetPositions().Count + " pos " + portfolio.getPositionsQuantity());
+                    //portfolio.PrintPortfolio();
+                    //Console.WriteLine(" 2sold " + portfolio.GetPositions()[i].quantity + " qqtPortfolio " + portfolio.getPositionsQuantity());
+
+                }
+                if (quantityToSell ==0)
+                {
                     break;
                 }
-                if (quantityToSell == 0) break;
             }
         }
     }

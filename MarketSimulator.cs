@@ -63,6 +63,7 @@ public class MarketSimulator
                 strategyManager.GetStrategy(order.strategyId).processOrderExecReport(report);
             }
         }
+        orders.Clear();
     }
 
     public decimal GetMarketPrice()
