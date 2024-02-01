@@ -7,12 +7,25 @@ public interface IMarketSimulator
     public void SetRiskManager(RiskAnalyser riskAnalyser);
     public void ProcessOrder(int strategyId, int quantity);
     public void UpdateMarketPrice(Decimal price);
+    public event EventHandler<OrderExecEventArgs> ReceiveOrder;
 
 }
+public class OrderExecEventArgs : EventArgs
+{
+    public OrderExecReport Report { get; }
+
+    public OrderExecEventArgs(OrderExecReport report)
+    {
+        Report = report;
+    }
+}
+
 
 public class MarketSimulator : IMarketSimulator
-{   
-	private static decimal currentMarketPrice = -1;
+{
+    public event EventHandler<OrderExecEventArgs> ReceiveOrder;
+
+    private static decimal currentMarketPrice = -1;
 
     private List<Order> orders = new List<Order>();
 
@@ -22,6 +35,10 @@ public class MarketSimulator : IMarketSimulator
     public MarketSimulator()
     {
 
+    }
+    private void RaiseReceiveOrderEvent(OrderExecReport report)
+    {
+        ReceiveOrder?.Invoke(this, new OrderExecEventArgs(report));
     }
 
     public void SetStrategyManager (StrategyManager strategyManager)
@@ -49,12 +66,10 @@ public class MarketSimulator : IMarketSimulator
 
             if (order.Quantity < 0) 
             {
-                OrderExecReport report = Sell(order.StrategyId, order.Quantity);
-                strategyManager.GetStrategy(order.StrategyId).processOrderExecReport(report);
+                Sell(order.StrategyId, order.Quantity);
             }
             else if (order.Quantity > 0) {
-                OrderExecReport report = Buy(order.StrategyId, order.Quantity);
-                strategyManager.GetStrategy(order.StrategyId).processOrderExecReport(report);
+                Buy(order.StrategyId, order.Quantity);
             }
 
         }
@@ -66,13 +81,15 @@ public class MarketSimulator : IMarketSimulator
         return currentMarketPrice;
     }
 
-    private static OrderExecReport Buy (int strategyId, int quantity)
+    private void Buy(int strategyId, int quantity)
     {
-        return new OrderExecReport (strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice() );
+        OrderExecReport report = new OrderExecReport(strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice());
+        RaiseReceiveOrderEvent(report);
     }
 
-    private static OrderExecReport Sell (int strategyId, int quantity)
+    private void Sell(int strategyId, int quantity)
     {
-        return new OrderExecReport(strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice() );
+        OrderExecReport report = new OrderExecReport(strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice());
+        RaiseReceiveOrderEvent(report);
     }
 }

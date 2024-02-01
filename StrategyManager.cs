@@ -29,6 +29,7 @@ public class StrategyManager
         strategies.Add(stratA);
     }
 
+
     public void RunStategies (decimal ticksPrice)
     {
         foreach (Strategy strategy in strategies)
@@ -58,6 +59,8 @@ public class Strategy : IStrategy
         this.market = market;
         // change dynamically the portfolio cash with main args
         this.portfolio = new Portfolio (startingPortfolioCash);
+        this.market.ReceiveOrder += ProcessOrderExecReport;
+
     }
 
     public void RunStrategy (decimal ticksPrice)
@@ -77,8 +80,10 @@ public class Strategy : IStrategy
 
     }
 
-    public void processOrderExecReport(OrderExecReport orderExecReport)
+    private void ProcessOrderExecReport(object sender, OrderExecEventArgs e)
     {
+        OrderExecReport orderExecReport = e.Report;
+
         if (orderExecReport.Quantity > 0)
         {
             //Console.WriteLine(" je cree un ordre de qqt " + orderExecReport.quantity);
