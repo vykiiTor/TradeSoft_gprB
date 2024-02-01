@@ -1,6 +1,6 @@
 ﻿using System;
 using Serilog;
-
+// record 
 public class Order
 {
     internal int strategyId { get; set; }
@@ -21,13 +21,14 @@ public class Order
         this.typeOrder = type_order;
         this.price = price;
     }
-
-    public string PrintOrder()
+   
+    public override string ToString()
     {
         return "order " + typeOrder + " from " + strategyId + " request done at " + time + " of " + quantity + " asset at " + price + "";
     }
-
 }
+
+public record Order2(int StrategyId, DateTime Time, int Quantity, TypeOrder TypeOrder, decimal Price = 0);
 
 public class OrderExecReport
 {

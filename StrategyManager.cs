@@ -46,10 +46,15 @@ public class StrategyManager
 public interface IStrategy
 {
     public void RunStrategy(MarketSimulator market);
+    //cf en dessous 
 }
 
 public class Strategy : IStrategy
 {
+    //une fois l'event recu on check stratId et faire qq chose si c'est bien notre id
+    
+    //passer market dans le constructeur parce que c'est le mm market a chaque fois pas besoin de reconstruire
+    //ou sinon juster passer un tick avec le prix 
     internal int strategyId;
     private Portfolio portfolio;
 

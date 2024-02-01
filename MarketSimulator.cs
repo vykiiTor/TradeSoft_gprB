@@ -23,6 +23,9 @@ public class MarketSimulator
     {
         this.riskAnalyser = riskAnalyser;
     }
+    //possiblement faire buyMarket pour juste specifier la quantite 
+    
+    //sur l'interface du market sim ya levent et les buy/sell
     
     //receive order and put into a data structure 
     //private
@@ -43,6 +46,7 @@ public class MarketSimulator
     //list of order 
     //check if order are for this price act accordingly
     //send back info
+    //faire attention au type parce que actuellement on ne prend que le type market
     public void UpdateMarketPrice(Decimal price)
     {
         currentMarketPrice = price;
@@ -61,6 +65,7 @@ public class MarketSimulator
             }
             if (report != null)
             {
+                //event au moment l'order process auquel les strats s'abonnent et lui fait l'exec report 
                 strategyManager.GetStrategy(order.strategyId).processOrderExecReport(report);
             }
         }
