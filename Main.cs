@@ -18,11 +18,12 @@ public class Run
         {
             if (args.Length == 1 && args!= null && decimal.TryParse(args[0], out decimal number))
             {
-                MarketSimulator simulator = new MarketSimulator();
-                RiskAnalyser risk = new RiskAnalyser();
-                StrategyManager strategy = new StrategyManager(simulator, risk, decimal.Parse(args[0]));
-                simulator.SetStrategyManager(strategy);
-                BacktestingEngine engine = new BacktestingEngine(simulator, risk, strategy);
+                MarketSimulator market = new MarketSimulator();
+                RiskAnalyser risk = new RiskAnalyser(market, decimal.Parse(args[0]));
+                StrategyManager strategy = new StrategyManager(market, decimal.Parse(args[0]));
+                market.SetStrategyManager(strategy);
+                BacktestingEngine engine = new BacktestingEngine(market, risk, strategy);
+                risk.StrategyReport();
             }
             else
             {

@@ -15,14 +15,7 @@ public class StrategyManager
         return strategies[strategyId];
     }
 
-    /* 
-     * strategy manager will handle ticks data and order sending/reception
-     * 
-     */
-
-
-
-    public StrategyManager(MarketSimulator market, RiskAnalyser risk, decimal startingPortfolioCash)
+    public StrategyManager(MarketSimulator market, decimal startingPortfolioCash)
 	{
 		this.market = market;
         Strategy stratA = new Strategy(0, market, startingPortfolioCash);
@@ -87,7 +80,7 @@ public class Strategy : IStrategy
         if (orderExecReport.Quantity > 0)
         {
             //Console.WriteLine(" je cree un ordre de qqt " + orderExecReport.quantity);
-            Console.WriteLine("Buying " + orderExecReport.Quantity + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
+            //Console.WriteLine("Buying " + orderExecReport.Quantity + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
             portfolio.cash -= orderExecReport.Quantity * orderExecReport.Price;
             portfolio.GetPositions().Add(new Position(GetNewPositionId(), orderExecReport.Price, orderExecReport.Quantity));
         }
@@ -95,7 +88,7 @@ public class Strategy : IStrategy
         {
             //Console.WriteLine(" process order " + portfolio.getPositionsQuantity());
             int quantityToSell = -orderExecReport.Quantity;
-            Console.WriteLine("Selling " + quantityToSell + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
+            //Console.WriteLine("Selling " + quantityToSell + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
             for( int i=0; i<portfolio.GetPositions().Count;i++)
             {
                 if (portfolio.GetPositions()[i].quantity > quantityToSell)

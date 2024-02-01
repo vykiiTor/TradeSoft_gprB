@@ -25,6 +25,7 @@ public class BacktestingEngine
 		{
 			market.UpdateMarketPrice(tick.price);
 			strategy.RunStategies(tick.price);
+			risk.ProcessTick(tick.price);
 		}
     }
     

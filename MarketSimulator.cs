@@ -4,7 +4,6 @@ using Serilog;
 public interface IMarketSimulator 
 {
     public void SetStrategyManager(StrategyManager strategyManager);
-    public void SetRiskManager(RiskAnalyser riskAnalyser);
     public void ProcessOrder(int strategyId, int quantity);
     public void UpdateMarketPrice(Decimal price);
     public event EventHandler<OrderExecEventArgs> ReceiveOrder;
@@ -30,7 +29,6 @@ public class MarketSimulator : IMarketSimulator
     private List<Order> orders = new List<Order>();
 
     private StrategyManager strategyManager;
-    internal RiskAnalyser riskAnalyser;
 
     public MarketSimulator()
     {
@@ -44,10 +42,6 @@ public class MarketSimulator : IMarketSimulator
     public void SetStrategyManager (StrategyManager strategyManager)
     {
         this.strategyManager = strategyManager;
-    }
-    public void SetRiskManager(RiskAnalyser riskAnalyser)
-    {
-        this.riskAnalyser = riskAnalyser;
     }
     
     //l event et les buy/sell
