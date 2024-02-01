@@ -4,6 +4,7 @@ using Serilog;
 
 public class RiskAnalyser
 {
+    //risk analyser s'abonne au mm event que les start
     private List<OrderExecReport> ordersLog = new List<OrderExecReport>();
     private Portfolio portfolio;
     public RiskAnalyser()
