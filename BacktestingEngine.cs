@@ -20,21 +20,12 @@ public class BacktestingEngine
 		this.risk = risk;
 		this.strategy = strategy;
 		
-		//foreach IEnumerable do 
-		/*
-		 *  market.UpdateMarketPrice(data.price);
-		   	    strategy.RunStrategy();
-		 */
-		//to check above 
 		IEnumerable<TicksData> ticks = TicksData.BuildEnum();
 		foreach (var tick in ticks)
 		{
 			market.UpdateMarketPrice(tick.price);
-			strategy.RunStategies();
+			strategy.RunStategies(tick.price);
 		}
-		// to update
-		//market.UpdateMarketPrice(data.price);
-		//strategy.RunStategies();
     }
     
 }

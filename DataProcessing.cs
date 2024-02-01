@@ -12,11 +12,9 @@ using Serilog;
 
 public class TicksData
 {
-    //mettre private later
     internal DateTime time { get; set; }
     internal long quantity { get; set; }
     internal decimal price { get; set; }
-
 
     public TicksData()
     {
@@ -55,7 +53,7 @@ public class TicksData
             String fileLine;
             while ((fileLine = reader.ReadLine()) != null)
             {
-                yield return fileLine;// into -> yield return line
+                yield return fileLine;
             }
         }
     }
@@ -67,7 +65,7 @@ public class TicksData
         return fullData;
     }
 
-    private static IEnumerable<TicksData> ProcessCsvLine(IEnumerable<String> csvLine) //IEnnumerable to tickdata 
+    private static IEnumerable<TicksData> ProcessCsvLine(IEnumerable<String> csvLine)
     {
         IEnumerable<TicksData> fullData;
         foreach (var line in csvLine)
@@ -138,7 +136,6 @@ public class OHCLData
 
             });
 
-        // Print the grouped TicksData
         foreach (var group in groupedTicksData)
         {
             ohclDatas.Add(new OHCLData(group.startTime, group.openPrice, group.highPrice, group.closePrice, group.lowPrice));
