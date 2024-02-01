@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Reflection;
-
+using Serilog;
 // Event arguments class to carry the data
 // https://stackoverflow.com/questions/15766219/ok-to-use-dataeventargstdata-instead-of-customized-event-data-class
 
