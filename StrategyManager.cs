@@ -15,8 +15,7 @@ public class StrategyManager
         return strategies[strategyId];
     }
 
-    /* run fonction that output an order
-     * each strategy will have a portofolio assiociated, how is risk manager assiociated
+    /* 
      * strategy manager will handle ticks data and order sending/reception
      * 
      */
@@ -26,18 +25,15 @@ public class StrategyManager
     public StrategyManager(MarketSimulator market, RiskAnalyser risk, string strategyName)
 	{
 		this.market = market;
-        Strategy stratA = new Strategy(0);
+        Strategy stratA = new Strategy(0, market);
         strategies.Add(stratA);
     }
 
-    public void RunStategies ()
+    public void RunStategies (decimal ticksPrice)
     {
         foreach (Strategy strategy in strategies)
         {
-            strategy.RunStrategy(market);
-
-            // wait to receive an Order from the Strategy
-            
+            strategy.RunStrategy(ticksPrice);            
         }
     }
     
@@ -45,64 +41,56 @@ public class StrategyManager
 
 public interface IStrategy
 {
-    public void RunStrategy(MarketSimulator market);
-    //cf en dessous 
+    public void RunStrategy(decimal ticksPrice);
 }
 
 public class Strategy : IStrategy
 {
     //une fois l'event recu on check stratId et faire qq chose si c'est bien notre id
     
-    //passer market dans le constructeur parce que c'est le mm market a chaque fois pas besoin de reconstruire
-    //ou sinon juster passer un tick avec le prix 
     internal int strategyId;
+    private MarketSimulator market;
     private Portfolio portfolio;
 
-    public Strategy (int strategyId)
+    public Strategy (int strategyId, MarketSimulator market)
     {
         this.strategyId = strategyId;
+        this.market = market;
+        // change dynamically the portfolio cash with main args
         this.portfolio = new Portfolio (1000);
     }
 
-    // return the quantity to buy to its not conveniant
-    public void RunStrategy (MarketSimulator market)
+    public void RunStrategy (decimal ticksPrice)
     {
-        decimal newPrice = market.GetMarketPrice();
-
         // check if the strat needs to do an action
-        if (newPrice < 16 && portfolio.cash > market.GetMarketPrice())
+        if (ticksPrice < 16 && portfolio.cash > ticksPrice)
         {
             //Console.WriteLine(" buying " + newPrice+" cash : "+ portfolio.cash+ " nbr pos : "+portfolio.getNbrPositions());
-            market.ProcessOrder(new Order(strategyId, DateTime.Now, 1, TypeOrder.Market));
+            market.ProcessOrder(strategyId, 1);
 
         }
-        else if (newPrice > 25 && portfolio.getPositionsQuantity() > 0)
+        else if (ticksPrice > 25 && portfolio.getPositionsQuantity() > 0)
         {
             //Console.WriteLine(" selling " + newPrice + " cash : " + portfolio.cash + " nbr pos : " + portfolio.getNbrPositions());
-            market.ProcessOrder(new Order(strategyId, DateTime.Now, -1, TypeOrder.Market));
+            market.ProcessOrder(strategyId, -1);
         }
-
-        // get order exec report
-
-        //OrderExecReport OrderExec = market.ProcessOrder(order);
-        //portfolio.ProcessOrder(OrderExec);
 
     }
 
     public void processOrderExecReport(OrderExecReport orderExecReport)
     {
-        if (orderExecReport.quantity > 0)
+        if (orderExecReport.Quantity > 0)
         {
             //Console.WriteLine(" je cree un ordre de qqt " + orderExecReport.quantity);
-            Console.WriteLine("Buying " + orderExecReport.quantity + " asset " + orderExecReport.strategyId + " at " + orderExecReport.price + " ; portfolio cash : " + portfolio.cash);
-            portfolio.cash -= orderExecReport.quantity * orderExecReport.price;
-            portfolio.GetPositions().Add(new Position(GetNewPositionId(), orderExecReport.price, orderExecReport.quantity));
+            Console.WriteLine("Buying " + orderExecReport.Quantity + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
+            portfolio.cash -= orderExecReport.Quantity * orderExecReport.Price;
+            portfolio.GetPositions().Add(new Position(GetNewPositionId(), orderExecReport.Price, orderExecReport.Quantity));
         }
-        else if (orderExecReport.quantity < 0)
+        else if (orderExecReport.Quantity < 0)
         {
             //Console.WriteLine(" process order " + portfolio.getPositionsQuantity());
-            int quantityToSell = -orderExecReport.quantity;
-            Console.WriteLine("Selling " + quantityToSell + " asset " + orderExecReport.strategyId + " at " + orderExecReport.price + " ; portfolio cash : " + portfolio.cash);
+            int quantityToSell = -orderExecReport.Quantity;
+            Console.WriteLine("Selling " + quantityToSell + " asset " + orderExecReport.StrategyId + " at " + orderExecReport.Price + " ; portfolio cash : " + portfolio.cash);
             for( int i=0; i<portfolio.GetPositions().Count;i++)
             {
                 if (portfolio.GetPositions()[i].quantity > quantityToSell)
@@ -111,7 +99,7 @@ public class Strategy : IStrategy
                    // Console.WriteLine(" sec " + quantityToSell);
                     //Console.WriteLine(" 1selling " + quantityToSell + " qqtPortfolio " + portfolio.getPositionsQuantity());
                     Position tmp = portfolio.GetPositions()[i];
-                    portfolio.cash += quantityToSell * orderExecReport.price;
+                    portfolio.cash += quantityToSell * orderExecReport.Price;
                     //Console.WriteLine(" qtt av: " + portfolio.GetPositions()[i].quantity);
                     portfolio.GetPositions()[i] = new Position(tmp.positionId, tmp.price, tmp.quantity + quantityToSell);
                     //Console.WriteLine(" 1sold " + quantityToSell + " qqtPortfolio " + portfolio.getPositionsQuantity());
@@ -122,7 +110,7 @@ public class Strategy : IStrategy
                 {
                     //Console.WriteLine(" 2selling " + portfolio.GetPositions()[i].quantity + " qqtPortfolio " + portfolio.getPositionsQuantity());
                     quantityToSell -= portfolio.GetPositions()[i].quantity;
-                    portfolio.cash += portfolio.GetPositions()[i].quantity * orderExecReport.price;
+                    portfolio.cash += portfolio.GetPositions()[i].quantity * orderExecReport.Price;
                     //Console.WriteLine("count avant " + portfolio.GetPositions().Count + " pos " + portfolio.getPositionsQuantity());
                     //portfolio.PrintPortfolio();
                     portfolio.GetPositions().RemoveAt(i);

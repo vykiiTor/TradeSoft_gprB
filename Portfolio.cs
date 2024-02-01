@@ -55,14 +55,14 @@ public class Portfolio
         return getNbrPositions;
     }
 
-    public void PrintPortfolio ()
+    public override String ToString ()
     {
+        string print = "";
         foreach (Position position in positions)
         {
-            Console.WriteLine("PositionId : "+position.positionId+ 
-                " ; price : "+position.price+
-                " ; qtt : "+position.quantity);
+            print+= ("PositionId : " +position.positionId+ " ; price : " +position.price+ " ; qtt : "+position.quantity) + "\n";
         }
+        return print;
     }
 
 }

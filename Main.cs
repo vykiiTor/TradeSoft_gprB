@@ -2,6 +2,7 @@
 
 public class Run
 {
+    // todo use args
     public static void Main(string[] args)
     {
         MarketSimulator simulator = new MarketSimulator();

@@ -1,9 +1,18 @@
 ﻿using System;
 using Serilog;
 
-public class MarketSimulator
+public interface IMarketSimulator 
 {
-	private decimal currentMarketPrice = -1;
+    public void SetStrategyManager(StrategyManager strategyManager);
+    public void SetRiskManager(RiskAnalyser riskAnalyser);
+    public void ProcessOrder(int strategyId, int quantity);
+    public void UpdateMarketPrice(Decimal price);
+
+}
+
+public class MarketSimulator : IMarketSimulator
+{   
+	private static decimal currentMarketPrice = -1;
 
     private List<Order> orders = new List<Order>();
 
@@ -23,68 +32,47 @@ public class MarketSimulator
     {
         this.riskAnalyser = riskAnalyser;
     }
-    //possiblement faire buyMarket pour juste specifier la quantite 
     
-    //sur l'interface du market sim ya levent et les buy/sell
+    //l event et les buy/sell
     
-    //receive order and put into a data structure 
-    //private
-    public void ProcessOrder(Order order)
+    public void ProcessOrder(int strategyId, int quantity)
     {
-        orders.Add(order);
-        /*decimal OrderPrice = -1;
-        OrderExecReport orderlog = new OrderExecReport();
-        if (order.typeOrder == TypeOrder.Market)
-        {
-            OrderPrice = this.currentMarketPrice;
-            orderlog = new OrderExecReport("1", DateTime.Now, order.quantity, order.typeOrder, OrderPrice);
-        }
-        // send orderLog to risk
-        return (orderlog);*/
+        orders.Add( new Order(strategyId, quantity) );
     }
 
-    //list of order 
-    //check if order are for this price act accordingly
-    //send back info
-    //faire attention au type parce que actuellement on ne prend que le type market
+    // this function only works for Market Order (OrderType.Market)
     public void UpdateMarketPrice(Decimal price)
     {
         currentMarketPrice = price;
-
-        // Process orders
-        OrderExecReport report = new OrderExecReport();
+        
         foreach (Order order in orders) {
-            if (order.quantity < 0) 
+
+            if (order.Quantity < 0) 
             {
-                order.price = price;
-                report = Sell(order);          
+                OrderExecReport report = Sell(order.StrategyId, order.Quantity);
+                strategyManager.GetStrategy(order.StrategyId).processOrderExecReport(report);
             }
-            else if (order.quantity>0) {
-                order.price = price;
-                report = Buy(order);
+            else if (order.Quantity > 0) {
+                OrderExecReport report = Buy(order.StrategyId, order.Quantity);
+                strategyManager.GetStrategy(order.StrategyId).processOrderExecReport(report);
             }
-            if (report != null)
-            {
-                //event au moment l'order process auquel les strats s'abonnent et lui fait l'exec report 
-                strategyManager.GetStrategy(order.strategyId).processOrderExecReport(report);
-            }
+
         }
         orders.Clear();
     }
 
-    public decimal GetMarketPrice()
+    public static decimal GetMarketPrice()
     {
         return currentMarketPrice;
     }
 
-    // new method for buying and selling that uses the data from receive order
-    private static OrderExecReport Buy (Order order)
+    private static OrderExecReport Buy (int strategyId, int quantity)
     {
-        return new OrderExecReport (order.strategyId, DateTime.Now, order.quantity, TypeOrder.Market, order.price);
+        return new OrderExecReport (strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice() );
     }
 
-    private static OrderExecReport Sell (Order order)
+    private static OrderExecReport Sell (int strategyId, int quantity)
     {
-        return new OrderExecReport(order.strategyId, DateTime.Now, order.quantity, TypeOrder.Market, order.price);
+        return new OrderExecReport(strategyId, DateTime.Now, quantity, TypeOrder.Market, GetMarketPrice() );
     }
 }
