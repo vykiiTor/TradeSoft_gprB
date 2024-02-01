@@ -22,10 +22,10 @@ public class StrategyManager
 
 
 
-    public StrategyManager(MarketSimulator market, RiskAnalyser risk, string strategyName)
+    public StrategyManager(MarketSimulator market, RiskAnalyser risk, decimal startingPortfolioCash)
 	{
 		this.market = market;
-        Strategy stratA = new Strategy(0, market);
+        Strategy stratA = new Strategy(0, market, startingPortfolioCash);
         strategies.Add(stratA);
     }
 
@@ -52,12 +52,12 @@ public class Strategy : IStrategy
     private MarketSimulator market;
     private Portfolio portfolio;
 
-    public Strategy (int strategyId, MarketSimulator market)
+    public Strategy (int strategyId, MarketSimulator market, decimal startingPortfolioCash)
     {
         this.strategyId = strategyId;
         this.market = market;
         // change dynamically the portfolio cash with main args
-        this.portfolio = new Portfolio (1000);
+        this.portfolio = new Portfolio (startingPortfolioCash);
     }
 
     public void RunStrategy (decimal ticksPrice)
