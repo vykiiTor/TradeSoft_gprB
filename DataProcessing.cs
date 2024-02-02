@@ -44,7 +44,7 @@ public class TicksData
         }
     }
     
-    private static IEnumerable<String> ReadFile(String filePath = "../../../tradesoft-ticks-sample.csv")
+    private static IEnumerable<String> ReadFile(String filePath)
     {
         using (FileStream fileStream = new FileStream(filePath, FileMode.Open))
         using (StreamReader reader = new StreamReader(fileStream))
@@ -58,9 +58,9 @@ public class TicksData
         }
     }
 
-    public static IEnumerable<TicksData> BuildEnum()
+    public static IEnumerable<TicksData> BuildEnum(String filePath)
     {
-        IEnumerable<string> lines = ReadFile();
+        IEnumerable<string> lines = ReadFile(filePath);
         IEnumerable<TicksData> fullData = ProcessCsvLine(lines);
         return fullData;
     }

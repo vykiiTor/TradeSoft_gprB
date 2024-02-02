@@ -42,39 +42,10 @@ public class RiskAnalyser
     {
         Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
     }
+
     private void ProcessOrderExecReport(object sender, OrderExecEventArgs e)
     {
-        OrderExecReport orderExecReport = e.Report;
-
-        if (orderExecReport.Quantity > 0)
-        {
-            portfolio.cash -= orderExecReport.Quantity * orderExecReport.Price;
-            portfolio.GetPositions().Add(new Position(GetNewPositionId(), orderExecReport.Price, orderExecReport.Quantity));
-        }
-        else if (orderExecReport.Quantity < 0)
-        {
-            int quantityToSell = -orderExecReport.Quantity;
-            for (int i = 0; i < portfolio.GetPositions().Count; i++)
-            {
-                if (portfolio.GetPositions()[i].quantity > quantityToSell)
-                {
-                    Position tmp = portfolio.GetPositions()[i];
-                    portfolio.cash += quantityToSell * orderExecReport.Price;
-                    portfolio.GetPositions()[i] = new Position(tmp.positionId, tmp.price, tmp.quantity + quantityToSell);
-                    break;
-                }
-                else
-                {
-                    quantityToSell -= portfolio.GetPositions()[i].quantity;
-                    portfolio.cash += portfolio.GetPositions()[i].quantity * orderExecReport.Price;
-                    portfolio.GetPositions().RemoveAt(i);
-                }
-                if (quantityToSell == 0)
-                {
-                    break;
-                }
-            }
-        }
+        portfolio.ProcessOrderExecReport(e);
     }
 
 }
