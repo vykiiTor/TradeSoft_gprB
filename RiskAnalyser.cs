@@ -40,7 +40,12 @@ public class RiskAnalyser
 
     public void StrategyReport()
     {
-        Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
+        var log = Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+        //Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
+        log.Information(" Profit and Loss : "+ProfitAndLoss());
     }
 
     private void ProcessOrderExecReport(object sender, OrderExecEventArgs e)
