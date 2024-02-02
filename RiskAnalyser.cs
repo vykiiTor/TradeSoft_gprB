@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Serilog;
 using static Portfolio;
 
@@ -38,9 +39,15 @@ public class RiskAnalyser
         return portfolio.GetCash() - portfolio.GetInitialCash() + portfolio.getPositionsQuantity()* lastTickPriceReceived;
     }
 
-    public void StrategyReport()
+    public void StrategyReport(string strategiesName)
     {
-        Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
+        string path = "./../../../TradeSoft-strategy-report.txt";
+        using (FileStream fs = File.Create(path))
+        {
+            string dataasstring = (strategiesName+"\nProfit and Loss : " + ProfitAndLoss());
+            byte[] info = new UTF8Encoding(true).GetBytes(dataasstring);
+            fs.Write(info, 0, info.Length);
+        }
     }
 
     private void ProcessOrderExecReport(object sender, OrderExecEventArgs e)
