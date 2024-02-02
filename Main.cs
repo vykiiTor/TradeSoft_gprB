@@ -8,7 +8,7 @@ using static OrderExecReport;
 using static Strategy;
 using static StrategyManager;
 using System.IO;
-
+using Serilog;
 public class Run
 {
     /* args[0] is the starting strategy portfolio cash
@@ -16,6 +16,10 @@ public class Run
      */
     public static void Main(string[] args)
     {
+        var log = Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
         try
         {
             if (args.Length == 2 && args!= null && decimal.TryParse(args[0], out decimal number) && File.Exists(args[1]))
@@ -34,7 +38,8 @@ public class Run
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Please enter a valid unique decimal number and a valid file path");
+            //Console.WriteLine("Please enter a valid unique decimal number and a valid file path");
+            log.Information("Please enter a valid unique decimal number and a valid file path");
         }
     }
 }

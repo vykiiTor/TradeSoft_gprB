@@ -41,6 +41,12 @@ public class RiskAnalyser
 
     public void StrategyReport(string strategiesName)
     {
+        var log = Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .WriteTo.Console()
+            .CreateLogger();
+        //Console.WriteLine(" Profit and Loss : "+ProfitAndLoss());
+        log.Information(" Profit and Loss : "+ProfitAndLoss());
         string path = "./../../../TradeSoft-strategy-report.txt";
         using (FileStream fs = File.Create(path))
         {

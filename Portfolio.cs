@@ -1,7 +1,7 @@
+using Serilog;
 public class Portfolio
 {
     static int positionId = 0;
-
     public static int GetNewPositionId()
     {
         return positionId++;
@@ -12,7 +12,7 @@ public class Portfolio
         internal readonly int positionId;
         internal readonly decimal price;
         internal int quantity;
-
+            
         public Position(int positionId, decimal price, int quantity)
         {
             this.positionId = positionId;
@@ -31,6 +31,10 @@ public class Portfolio
         this.cash = cash;
         this.initialCash = cash;
         this.positions = new List<Position>();
+        var log = Log.Logger = new LoggerConfiguration()
+			.MinimumLevel.Debug()
+			.WriteTo.Console()
+			.CreateLogger();
 
     }
 
@@ -68,6 +72,7 @@ public class Portfolio
     internal void ProcessOrderExecReport(OrderExecEventArgs e)
     {
         OrderExecReport orderExecReport = e.Report;
+        
 
         if (orderExecReport.Quantity > 0)
         {

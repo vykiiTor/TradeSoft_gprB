@@ -18,6 +18,10 @@ public class BacktestingEngine
 		this.market = market;
 		this.risk = risk;
 		this.strategy = strategy;
+		var log = Log.Logger = new LoggerConfiguration()
+			.MinimumLevel.Debug()
+			.WriteTo.Console()
+			.CreateLogger();
 		
 		IEnumerable<TicksData> ticks = TicksData.BuildEnum(filePath);
 		foreach (var tick in ticks)
