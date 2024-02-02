@@ -29,7 +29,7 @@ public class Run
                 StrategyManager strategy = new StrategyManager(market, decimal.Parse(args[0]));
                 market.SetStrategyManager(strategy);
                 BacktestingEngine engine = new BacktestingEngine(market, risk, strategy, args[1]);
-                risk.StrategyReport();
+                risk.StrategyReport(strategy.GetStrategiesNames());
             }
             else
             {

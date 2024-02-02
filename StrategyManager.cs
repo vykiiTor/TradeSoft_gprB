@@ -22,6 +22,15 @@ public class StrategyManager
         strategies.Add(stratA);
     }
 
+    public String GetStrategiesNames ()
+    {
+        string stratNames = "Strategies: \n";
+        foreach (Strategy strategy in strategies)
+        {
+            stratNames += strategy.strategyId+"\n";
+        }
+        return stratNames;
+    }
 
     public void RunStategies (decimal ticksPrice)
     {
