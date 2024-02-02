@@ -30,7 +30,6 @@ public class BacktestingEngine
 			strategy.RunStategies(tick.price);
 			risk.ProcessTick(tick.price);
 		}
-		log.Information("gay");
     }
     
 }
