@@ -13,18 +13,18 @@ public class BacktestingEngine
 	private RiskAnalyser risk;
 	private StrategyManager strategy;
 	
-    public BacktestingEngine(MarketSimulator market, RiskAnalyser risk, StrategyManager strategy,
-		string filePath = "../../../tradesoft-ticks-sample.csv")
+    public BacktestingEngine(MarketSimulator market, RiskAnalyser risk, StrategyManager strategy, string filePath)
 	{
 		this.market = market;
 		this.risk = risk;
 		this.strategy = strategy;
 		
-		IEnumerable<TicksData> ticks = TicksData.BuildEnum();
+		IEnumerable<TicksData> ticks = TicksData.BuildEnum(filePath);
 		foreach (var tick in ticks)
 		{
 			market.UpdateMarketPrice(tick.price);
 			strategy.RunStategies(tick.price);
+			risk.ProcessTick(tick.price);
 		}
     }
     
